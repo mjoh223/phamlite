@@ -2,14 +2,13 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output, State
-import numpy as np
 import pandas as pd
 from Bio import SeqIO
 from Bio.Seq import Seq
 from seeker import SeekerFasta
 from Bio.SeqRecord import SeqRecord
 import os
-from itertools import permutations, combinations
+from itertools import combinations
 from Bio.Blast import NCBIXML
 import glob
 from Bio.Blast.Applications import NcbiblastnCommandline
@@ -17,8 +16,6 @@ import shutil
 import subprocess
 import csv
 import plotly.graph_objects as go
-import plotly.express as px
-import tempfile
 import random
 import string
 import base64
@@ -467,7 +464,7 @@ def load_dropdown(list_of_contents, list_of_names, list_of_dates):
     def randomString(stringLength=8):
         letters = string.ascii_lowercase
         return ''.join(random.choice(letters) for i in range(stringLength))
-    path = '/Users/matt/OneDrive/UCSF/JBD_Lab_Rotation/phamlite/app'
+    path = '/app'
     if list_of_contents is not None:
         f  =  os.path.join(path, randomString(4))
         os.makedirs(f)
