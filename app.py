@@ -5,7 +5,6 @@ from dash.dependencies import Input, Output, State
 import pandas as pd
 from Bio import SeqIO
 from Bio.Seq import Seq
-from seeker import SeekerFasta
 from Bio.SeqRecord import SeqRecord
 import os
 from itertools import combinations
