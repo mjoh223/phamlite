@@ -1,7 +1,7 @@
 import dash
 import dash_bootstrap_components as dbc
-import dash_core_components as dcc
-import dash_html_components as html
+from dash import dcc
+from dash import html
 from dash.dependencies import Input, Output, State
 import pandas as pd
 from Bio import SeqIO, SeqUtils
@@ -32,7 +32,7 @@ from colour import Color
 app = dash.Dash(__name__)#, external_stylesheets=external_stylesheets)
 server = app.server
 def makedir(f):
-    directories = ['tmp','faa','fna','blast_out','cluster_data','cluster_out','seeker_output']
+    directories = ['tmp','faa','fna','blast_out','cluster_data','cluster_out']
     for basename in directories:
         os.mkdir( os.path.join(f, basename) )
 
@@ -506,10 +506,11 @@ def load_dropdown(list_of_contents, list_of_names, list_of_dates):
                Input('hidden_phages','children'),
                Input('hidden_blast_di','children')])
 def update_output(selected_order, pham_df, phages, blast_di):
-    pham_df = pd.read_json(pham_df)
-    phages = jsonpickle.decode(phages)
-    blast_di = jsonpickle.decode(blast_di)
-    fig = graphing(pham_df, phages, blast_di, selected_order)
+    #pham_df = pd.read_json(pham_df)
+    #phages = jsonpickle.decode(phages)
+    #blast_di = jsonpickle.decode(blast_di)
+    #fig = graphing(pham_df, phages, blast_di, selected_order)
+    fig = {}
     return fig
 
 app.run_server(host="0.0.0.0", port="8050")
