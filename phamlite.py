@@ -44,7 +44,7 @@ class Locus:
         self.tRNAs = []
         self.repeat_regions = []
         self.annotations = ann
-        self.fna = fna
+        self.fna = str(fna)
         self.filename = filename
         self.phams = []
         self.gc_skew = []
@@ -162,16 +162,7 @@ class Locus:
                     if percent_id > 90:
                         shade = 'green'
                     end = len(self.fna)
-                    #if source_h in [0]:
-                    #    accession = order[source_h][0]
-                    #    end = [len(x.fna) for x in phages if x.accessions == accession][0]
-                    #    source_start = (end-source_start)
-                    #    source_end = (end-source_end)
-                    #if target_h in [0]:
-                    #    accession = order[target_h][0]
-                    #    end = [len(x.fna) for x in phages if x.accessions == accession][0]
-                    #    target_start = (end-target_start)
-                    #    target_end = (end-target_end)
+
                     x=(source_start, target_start, target_end, source_end, source_start)
                     y=(source_h, target_h, target_h, source_h, source_h)
 
@@ -181,16 +172,8 @@ class Locus:
                     x=(source_start, target_start, target_end, source_end, source_start)
                     y=(source_h, target_h, target_h, source_h, source_h)
                     shade_trace = go.Scatter(x=x,y=y,marker=dict(size=1),fill='toself',fillcolor=shade,line_color=shade,opacity=.1,text='{}%'.format(percent_id),hoverinfo='text')
-                    #boundary_left = go.Scatter(x=(source_start, target_start),y=(source_h, target_h),line_color = shade, mode = 'lines',opacity=.5)
-                    #boundary_right = go.Scatter(x=(target_end, source_end),y=(target_h, source_h),line_color = shade, mode = 'lines',opacity=.5)
                     shade_trace_list.append(shade_trace)
-                    # boundary_left_list.append(boundary_left)
-                    # boundary_right_list.append(boundary_right)
-
-
         return shade_trace_list#, boundary_left_list, boundary_right_list
-    def encode(self):
-        return self.__dict__
 
 class TRNA(object):
     def __init__(self, feature):
@@ -262,9 +245,10 @@ def cluster(phages, working_path):
     input_file = os.path.join(working_path, 'faa', 'orfs_pool.faa')
     createdb = ['{}/mmseqs'.format(binb),
                 'createdb',
+                '-v',
+                '0',
                 input_file,
                 os.path.join(working_path, 'cluster_out', 'DB')]
-    print(createdb)
     subprocess.run(createdb, shell=False)
     cluster = ['{}/mmseqs'.format(binb),
                'cluster',
@@ -273,7 +257,6 @@ def cluster(phages, working_path):
                os.path.join(working_path, 'cluster_out', 'DB'),
                os.path.join(working_path, 'cluster_out', 'DB_clu'),
                os.path.join(working_path, 'tmp')]
-    print(cluster)
     subprocess.run(cluster, shell=False)
     #mmseqs createtsv DB DB DB_clu DB_clu.tsv
     createtsv = ['{}/mmseqs'.format(binb),
@@ -282,7 +265,6 @@ def cluster(phages, working_path):
                  os.path.join(working_path,'cluster_out', 'DB'),
                  os.path.join(working_path,'cluster_out', 'DB_clu'),
                  os.path.join(working_path,'cluster_data','DB_clu.tsv')]
-    print(createtsv)
     subprocess.run(createtsv, shell=False)
     return pd.read_csv(os.path.join(working_path, 'cluster_data/' 'DB_clu.tsv'), sep='\t',header=None, names=['representative','member'])
 
@@ -321,6 +303,7 @@ def load_phages(phage_list):
                         locus.add_feature(TRNA(feature))
                     if feature.type == 'repeat_region':
                         locus.add_feature(RepeatRegion(feature))
+                #locus = jsonpickle.encode(locus)
                 genome_list.append(locus)
     return genome_list
 
@@ -365,12 +348,11 @@ def graphing(pham_df, phages, blast_di, order):
     #sorted_phages = sorted(phages, key=lambda x: x.annotations['organism'])
     order = [phages[x] for x in order]
     order_reduced = list(zip([x.accessions for x in order], range(len(order))))
-
     fig = go.Figure(layout={'width':1200,'height':1200})
     for z, phage in enumerate(order):
-        print(dir(phage))
         fig.add_trace(go.Scatter(x=(0,len(phage.fna)),y=(z,z), mode='lines', line=dict(color='black', width=4, dash='dash')))
         shade = phage.load_syn_trace(blast_di, order_reduced, phages, z)
+        print(shade)
         [fig.add_trace(x) for x in shade]
     for z, phage in enumerate(order):
         try:
@@ -463,6 +445,37 @@ def layout():
 #if __name__ == '__main__':
 app.layout = layout()
 
+def global_load_syn_trace(self, blast_di, order, phages, current_h=0):
+    shade_trace_list, boundary_left_list, boundary_right_list = [], [], []
+    for comparison, matches in blast_di.items():
+        if len(matches) > 0 and self.accessions in comparison:
+            for match in matches.itertuples():
+                try:
+                    target_h = [x[1] for x in order if x[0] in match.subject][0]
+                    source_h = [x[1] for x in order if x[0] in match.query][0]
+                except:
+                    break
+                if abs(target_h - source_h) > 1:
+                    break
+                source, target = match.query, match.subject #am i the source or the target?
+                if self.accessions in source:
+                    self.whoami = 'source'
+                else:
+                    self.whoami = 'target'
+                source_start, source_end, target_start, target_end, percent_id = match.q_start,match.q_end,match.s_start,match.s_end,match.identity
+                shade = 'purple'
+                if percent_id > 90:
+                    shade = 'green'
+                end = len(self.fna)
+                x=(source_start, target_start, target_end, source_end, source_start)
+                y=(source_h, target_h, target_h, source_h, source_h)
+                shade_trace = go.Scatter(x=x,y=y,marker=dict(size=1),fill='toself',fillcolor=shade,line_color=shade,opacity=.1,text='{}%'.format(percent_id),hoverinfo='text')
+                shade_trace_list.append(shade_trace)
+                x=(source_start, target_start, target_end, source_end, source_start)
+                y=(source_h, target_h, target_h, source_h, source_h)
+                shade_trace = go.Scatter(x=x,y=y,marker=dict(size=1),fill='toself',fillcolor=shade,line_color=shade,opacity=.1,text='{}%'.format(percent_id),hoverinfo='text')
+                shade_trace_list.append(shade_trace)
+    return shade_trace_list#, boundary_left_list, boundary_right_list
 
 @app.callback([Output('dropdown','options'),
            Output('dropdown','value'),
@@ -493,11 +506,9 @@ def load_dropdown(list_of_contents, list_of_names, list_of_dates):
 
         phage_list = glob.glob(os.path.join(f, '*.gb'))
         phages = load_phages(phage_list)
-        print(phages, flush=True)
         blast_di = blastn(phages, f)
-        print('CLUSTERING')
         pham_df = cluster(phages, f)
-        print('done')
+
         labels = [ {'label':x.annotations['organism'], 'value':i} for i, x in enumerate(phages) ]
         pham_df = pham_df.to_json()
         phages = jsonpickle.encode(phages)
@@ -515,7 +526,7 @@ def load_dropdown(list_of_contents, list_of_names, list_of_dates):
 def update_output(selected_order, pham_df, phages, blast_di):
     pham_df = pd.read_json(pham_df)
     phages = jsonpickle.decode(phages)
-    print(phages[0].fna)
+    print(phages)
     blast_di = jsonpickle_pd.decode(blast_di)
     fig = graphing(pham_df, phages, blast_di, selected_order)
     return fig
