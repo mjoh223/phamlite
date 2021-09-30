@@ -4,9 +4,9 @@ from dash import dcc
 from dash import html
 from dash.dependencies import Input, Output, State
 import pandas as pd
+print(pd.__version__)
 from Bio import SeqIO, SeqUtils
 from Bio.Seq import Seq
-#from seeker import SeekerFasta
 from Bio.SeqRecord import SeqRecord
 import os
 from itertools import combinations
@@ -15,6 +15,8 @@ import glob
 from Bio.Blast.Applications import NcbiblastnCommandline
 import shutil
 import jsonpickle
+import jsonpickle.ext.pandas as jsonpickle_pd
+jsonpickle_pd.register_handlers()
 import subprocess
 import csv
 import plotly.graph_objects as go
@@ -187,6 +189,8 @@ class Locus:
 
 
         return shade_trace_list#, boundary_left_list, boundary_right_list
+    def encode(self):
+        return self.__dict__
 
 class TRNA(object):
     def __init__(self, feature):
@@ -244,6 +248,8 @@ class Orf(object):
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__,
             sort_keys=True, indent=4)
+    def encode(self):
+        return self.__dict__
 
 def cluster(phages, working_path):
     f = open(os.path.join(working_path, 'faa', 'orfs_pool.faa'), 'w')
@@ -362,6 +368,7 @@ def graphing(pham_df, phages, blast_di, order):
 
     fig = go.Figure(layout={'width':1200,'height':1200})
     for z, phage in enumerate(order):
+        print(dir(phage))
         fig.add_trace(go.Scatter(x=(0,len(phage.fna)),y=(z,z), mode='lines', line=dict(color='black', width=4, dash='dash')))
         shade = phage.load_syn_trace(blast_di, order_reduced, phages, z)
         [fig.add_trace(x) for x in shade]
@@ -439,9 +446,9 @@ def layout():
             # Allow multiple files to be uploaded
             multiple=True
                 ),
-             html.Div(id='hidden_pham_df', style={'display': 'none'}),
-             html.Div(id='hidden_phages', style={'display': 'none'}),
-             html.Div(id='hidden_blast_di', style={'display': 'none'}),
+             dcc.Store(id='hidden_pham_df'),
+             dcc.Store(id='hidden_phages'),
+             dcc.Store(id='hidden_blast_di'),
              dcc.Dropdown(
                 id = 'dropdown',
                 options = [{'label':'select genomes','value': 0}],
@@ -494,7 +501,7 @@ def load_dropdown(list_of_contents, list_of_names, list_of_dates):
         labels = [ {'label':x.annotations['organism'], 'value':i} for i, x in enumerate(phages) ]
         pham_df = pham_df.to_json()
         phages = jsonpickle.encode(phages)
-        blast_di = jsonpickle.encode(blast_di)
+        blast_di = jsonpickle_pd.encode(blast_di)
         return labels, list(range(len(labels))), pham_df, phages, blast_di
     else:
         print('empty', flush=True)
@@ -506,11 +513,11 @@ def load_dropdown(list_of_contents, list_of_names, list_of_dates):
                Input('hidden_phages','children'),
                Input('hidden_blast_di','children')])
 def update_output(selected_order, pham_df, phages, blast_di):
-    #pham_df = pd.read_json(pham_df)
-    #phages = jsonpickle.decode(phages)
-    #blast_di = jsonpickle.decode(blast_di)
-    #fig = graphing(pham_df, phages, blast_di, selected_order)
-    fig = {}
+    pham_df = pd.read_json(pham_df)
+    phages = jsonpickle.decode(phages)
+    print(phages[0].fna)
+    blast_di = jsonpickle_pd.decode(blast_di)
+    fig = graphing(pham_df, phages, blast_di, selected_order)
     return fig
 
 app.run_server(host="0.0.0.0", port="8050")
