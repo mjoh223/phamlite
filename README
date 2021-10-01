@@ -1,0 +1,7 @@
+Phamlite
+
+Dependencies:
+-GNU parallel
+-MMSeqs2
+-BLASTn
+
