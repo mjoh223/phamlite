@@ -1,0 +1,401 @@
+LOCUS       NC_004629               8592 bp    DNA     linear   PHG 20-DEC-2020
+DEFINITION  Pseudomonas phage phiKZ, complete genome.
+ACCESSION   NC_004629 REGION: 34905..43496
+VERSION     NC_004629.1  GI:29134936
+DBLINK      BioProject: PRJNA485481
+KEYWORDS    RefSeq.
+SOURCE      Pseudomonas virus phiKZ
+  ORGANISM  Pseudomonas virus phiKZ
+            Viruses; Duplodnaviria; Heunggongvirae; Uroviricota;
+            Caudoviricetes; Caudovirales; Myoviridae; Phikzvirus.
+REFERENCE   1  (bases 1 to 8592)
+  AUTHORS   Sycheva,L.V., Shneider,M.M., Sykilinda,N.N., Ivanova,M.A.,
+            Miroshnikov,K.A. and Leiman,P.G.
+  TITLE     Crystal structure and location of gp131 in the bacteriophage phiKZ
+            virion
+  JOURNAL   Virology 434 (2), 257-264 (2012)
+   PUBMED   23031178
+REFERENCE   2  (bases 1 to 8592)
+  AUTHORS   Lecoutere,E., Ceyssens,P.J., Miroshnikov,K.A., Mesyanzhinov,V.V.,
+            Krylov,V.N., Noben,J.P., Robben,J., Hertveldt,K., Volckaert,G. and
+            Lavigne,R.
+  TITLE     Identification and comparative analysis of the structural proteomes
+            of phiKZ and EL, two giant Pseudomonas aeruginosa bacteriophages
+  JOURNAL   Proteomics 9 (11), 3215-3219 (2009)
+   PUBMED   19526553
+REFERENCE   3  (bases 1 to 8592)
+  AUTHORS   Briers,Y., Volckaert,G., Cornelissen,A., Lagaert,S., Michiels,C.W.,
+            Hertveldt,K. and Lavigne,R.
+  TITLE     Muralytic activity and modular structure of the endolysins of
+            Pseudomonas aeruginosa bacteriophages phiKZ and EL
+  JOURNAL   Mol. Microbiol. 65 (5), 1334-1344 (2007)
+   PUBMED   17697255
+REFERENCE   4  (bases 1 to 8592)
+  AUTHORS   Mesyanzhinov,V.V., Robben,J., Grymonprez,B., Kostyuchenko,V.A.,
+            Bourkaltseva,M.V., Sykilinda,N.N., Krylov,V.N. and Volckaert,G.
+  TITLE     The Genome of Bacteriophage phiKZ of Pseudomonas aeruginosa
+  JOURNAL   J. Mol. Biol. 317 (1), 1-19 (2002)
+   PUBMED   11916376
+REFERENCE   5  (bases 1 to 8592)
+  CONSRTM   NCBI Genome Project
+  TITLE     Direct Submission
+  JOURNAL   Submitted (04-JUN-2019) National Center for Biotechnology
+            Information, NIH, Bethesda, MD 20894, USA
+REFERENCE   6  (bases 1 to 8592)
+  AUTHORS   Mesyanzhinov,V.V., Robben,J., Grymonprez,B., Kostyuchenko,V.A.,
+            Bourkaltseva,M.V., Sykilinda,N.N., Krylov,V.N. and Volckaert,G.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (11-JUL-2001) Laboratory of Gene Technology, Katholieke
+            Universiteit Leuven, Kardinaal Mercierlaan 92, Heverlee B-3001,
+            Belgium
+COMMENT     PROVISIONAL REFSEQ: This record has not yet been subject to final
+            NCBI review. The reference sequence is identical to AF399011.
+            COMPLETENESS: full length.
+FEATURES             Location/Qualifiers
+     source          1..8592
+                     /organism="Pseudomonas virus phiKZ"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:169683"
+     gene            complement(58..858)
+                     /locus_tag="PHIKZ042"
+                     /db_xref="GeneID:1258351"
+     CDS             complement(58..858)
+                     /locus_tag="PHIKZ042"
+                     /experiment="RNA sequence analysis"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="PHIKZ042"
+                     /protein_id="NP_803608.1"
+                     /db_xref="GI:29134978"
+                     /db_xref="GeneID:1258351"
+                     /translation="MNPITKALRDISFKIPKQILNTVFLSSEMSGCGAAISLETRIRE
+                     AVIEPRVMLDIDLVGGSKVFIPLDFPVQAEYVDPYTVVYYIPDEYTQQRPIIQCYSIH
+                     FGVLGFHTAGYAMHYNESSMGALTRRVLDSARQLPVAQTAYINLINPHTVMVRYINIP
+                     NYSSFLACRVGNDEELNTIRPTAIPAFSKLIEYAVKSYIYNELFVSMGEAQLSGGAEL
+                     GVFRDKVYEYADAEELYQEQLMRWMKISRQFNDPEGKRHHIRTITAAQ"
+     gene            1437..2510
+                     /locus_tag="PHIKZ043"
+                     /db_xref="GeneID:1258473"
+     CDS             1437..2510
+                     /locus_tag="PHIKZ043"
+                     /experiment="RNA sequence analysis"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="PHIKZ043"
+                     /protein_id="NP_803609.1"
+                     /db_xref="GI:29134979"
+                     /db_xref="GeneID:1258473"
+                     /translation="MSNKLIVLDTRHQEKAIYDLLGQLTASASIDEAIGVKLSKDVAQ
+                     QFLHLMVENIVESLVSYKTAKDQYTNLKMAAAIFNCAVTDVDSNKVAWVENLMKLPYL
+                     ETIYLDIYKQVAKYIDSGTWIQWDVVKAGSVITLISGKDYRIAEYDRVHGIDNGDDHA
+                     VVSLNLLNPLNYLFSEFLRIFFHGFDRINLQTLGYSIYESRRKTQLSLANGGSYTLNK
+                     DHITTNHAYNIAVEYIQEQLTALLIGVIVKQYSNIKVSYLIPKVNHDFFASLGLDNLL
+                     LFEEKYISPLVSSINMAYFSTRIEHDVKYELEYHSYVISVYKNKNATYPIEKLVFEYQ
+                     RGDYLPDDQRAQAERYILENNLY"
+     gene            2590..2949
+                     /locus_tag="PHIKZ_p13"
+                     /db_xref="GeneID:1258472"
+     CDS             2590..2949
+                     /locus_tag="PHIKZ_p13"
+                     /experiment="RNA sequence analysis"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="PHIKZ044"
+                     /protein_id="NP_803610.2"
+                     /db_xref="GI:1678209605"
+                     /db_xref="GeneID:1258472"
+                     /translation="MCIRMEVRSFVQDQHSDIWKSIKNSIGAEYALTIVLAAASERAS
+                     GSTSNDVIELINQMLGYRDICDIDLTTYLYNCSNRVVLPSAGNIQLNRVIYDTEKPED
+                     LYVTITHTTTSFFTKSD"
+     gene            3059..3325
+                     /locus_tag="PHIKZ_p14"
+                     /db_xref="GeneID:40340290"
+     CDS             3059..3325
+                     /locus_tag="PHIKZ_p14"
+                     /experiment="RNA sequence analysis"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="PHIKZ044.1"
+                     /protein_id="YP_009639894.1"
+                     /db_xref="GI:1678209606"
+                     /db_xref="GeneID:40340290"
+                     /translation="MQMVIKEEMFYEYAKDIHFMHKLIELLDEGAEQIMHLIPTNTKE
+                     LWYETEARDGLYIGGSTTSGICIANRSGIPTINHIDKEIYLPNK"
+     gene            3198..3656
+                     /locus_tag="PHIKZ045"
+                     /db_xref="GeneID:1258450"
+     CDS             3198..3656
+                     /locus_tag="PHIKZ045"
+                     /experiment="RNA sequence analysis"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="PHIKZ045"
+                     /protein_id="NP_803611.1"
+                     /db_xref="GI:29134981"
+                     /db_xref="GeneID:1258450"
+                     /translation="MKQKHEMDCTSEEVQRLVYVLPIEVVFPQLITLIKKFTYLTNKD
+                     EATVIALLTQWVVKMMSKLQQDNTVIPFVDIPIQLGNGPDWDEFINLFYTTGIQLLHR
+                     TPKNLIDYKFIRVIDNKVVLLTIVTGKEWSQYAIVANFETAFFYGRARCR"
+     gene            3598..4032
+                     /locus_tag="PHIKZ046"
+                     /db_xref="GeneID:1258467"
+     CDS             3598..4032
+                     /locus_tag="PHIKZ046"
+                     /experiment="RNA sequence analysis"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="PHIKZ046"
+                     /protein_id="NP_803612.1"
+                     /db_xref="GI:29134982"
+                     /db_xref="GeneID:1258467"
+                     /translation="MQLLLILKPRSFTEELGVGEPTDFVLWCINRLLAAYVEYFNHWQ
+                     RLDWPTFLEQWLEDYLSDTYIEPDRPMSMMVFDHQGNPNTINWHLRSAEIIERVLDLF
+                     GTDFLEIIQKQVIQAGNLITSLKCIEVDKYKMVTKLVMRSQT"
+     gene            4029..4565
+                     /locus_tag="PHIKZ047"
+                     /db_xref="GeneID:1258482"
+     CDS             4029..4565
+                     /locus_tag="PHIKZ047"
+                     /experiment="RNA sequence analysis"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="PHIKZ047"
+                     /protein_id="NP_803613.1"
+                     /db_xref="GI:29134983"
+                     /db_xref="GeneID:1258482"
+                     /translation="MMHPLLYRQQEMQRINDANNITPGQQGMTSFVVINISDIWPIVN
+                     KMADVVVNKSYNTPYPYTEHQSIEQLWYQAINSYIEFLAQQPTQPIIGVDYYLQEYFP
+                     SVAPVIMQDKYALSILNMWFATVCKTLASKLQSEIAHLYQNGYGVERIQSIAVDQHNQ
+                     GYILEGEDFGMDCYNDVD"
+     gene            4638..5021
+                     /locus_tag="PHIKZ048"
+                     /db_xref="GeneID:1258488"
+     CDS             4638..5021
+                     /locus_tag="PHIKZ048"
+                     /experiment="RNA sequence analysis"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="PHIKZ048"
+                     /protein_id="NP_803614.1"
+                     /db_xref="GI:29134984"
+                     /db_xref="GeneID:1258488"
+                     /translation="MEKRVFIVFKSKESEVYSQHLLREYTKRMIYPDCPTPLDLFEES
+                     RKLSYMDTLNNDIYIHMLMYGHDSFDDPDEDIELENYSTKGYVIEYCTDFINSFKEKY
+                     PNGHVLITVPMDTKGLFGVVVLLDE"
+     gene            5056..5472
+                     /locus_tag="PHIKZ049"
+                     /db_xref="GeneID:1258203"
+     CDS             5056..5472
+                     /locus_tag="PHIKZ049"
+                     /experiment="RNA sequence analysis"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="PHIKZ049"
+                     /protein_id="NP_803615.1"
+                     /db_xref="GI:29134985"
+                     /db_xref="GeneID:1258203"
+                     /translation="MAVNIRDIQAGDRISFEVYPYAILGTNFKNVTVEGIVTASVASA
+                     MGFDVAAAGQQVYPSLPAGSAPVDPTQYNYIRVRMANNESVMFIGIPWIVANTLERVD
+                     GKRLTLVWDDVDNKMYDRILLAVRQNNAPPTSVTYE"
+     gene            5674..7869
+                     /locus_tag="PHIKZ050"
+                     /db_xref="GeneID:1258212"
+     CDS             5674..7869
+                     /locus_tag="PHIKZ050"
+                     /experiment="RNA sequence analysis"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="PHIKZ050"
+                     /protein_id="NP_803616.1"
+                     /db_xref="GI:29134986"
+                     /db_xref="GeneID:1258212"
+                     /translation="MTAFAQPNPFLKDVNDYHRDIDIINACLDDNAKYLQLMTKDELN
+                     ISLEECKEFVKEQLRQNGEYALRNPLATILDKNKFGDRELKTVSFMAFLNRVKKQNLL
+                     LSPSMTAYLPESVRQSTHSIYIAEGVKNRKRVKGEQMQAEREAAAFLQAGDKENSQIK
+                     TELAQVRKGEQENFKINNNSYSGGTVSAATILYYKSTHSSLTSTCRTGTSYANSNNEK
+                     FIMGNRHYYTPEITKANLVNTINVADMELIQKAVTNFNLHCPTPEEVVDMVLYSTKHY
+                     WQNKYYTAQILKLATGMTPVERAAVMYVGDLYHLYKYNKELIKSFLIKLSQVGTKEQI
+                     ITEEEYSTYDGDMDLLASFICFDTVKGRSKAKLKESDPDTLNQVYATGRNIAETLNEY
+                     RLLIEAFFLTKCVPSSIHAFPTVYRRAAVISDTDSTMFTLQWWVEEFFGKVTFSNEAK
+                     RLVFALVFLVSEVVMHILAIQSANMGVSKDKLRLFAMKNEYYFAVLALTTRSKHYFAS
+                     QDAQEGVMFNESRMEIKGVGLRDSKVPKKINSRAKTLMEDIIKTVKTEEKIDLASILK
+                     EVGDIEREIIESVRSGKAEYLTSGQTKRPESYKSEDNSTHKKGLVWKTVFAPSFGDAG
+                     DPPYSHVKISVTLNNKTAIKEWIDGIEDKKLAARIQAWVTEENKTSIGDFHIPSTVVE
+                     TGRIPEVITRVADVRTIIGNTMGVFYLTLESLGIFLIDKNNDRLISDFY"
+     gene            7968..8144
+                     /locus_tag="PHIKZ_p15"
+                     /db_xref="GeneID:40340275"
+     CDS             7968..8144
+                     /locus_tag="PHIKZ_p15"
+                     /experiment="RNA sequence analysis"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="PHIKZ050.1"
+                     /protein_id="YP_009639895.1"
+                     /db_xref="GI:1678209607"
+                     /db_xref="GeneID:40340275"
+                     /translation="MTNHTEFNFDLDRMKKAINSGTITLPTVPSGLTREEKRAFIRKY
+                     IKDKLKEVDDNGKD"
+     gene            8131..>8592
+                     /locus_tag="PHIKZ051"
+                     /db_xref="GeneID:1258215"
+     CDS             8131..>8592
+                     /locus_tag="PHIKZ051"
+                     /experiment="RNA sequence analysis"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="PHIKZ051"
+                     /protein_id="NP_803617.1"
+                     /db_xref="GI:29134987"
+                     /db_xref="GeneID:1258215"
+                     /translation="MEKTNEVRVITWNDYSKLVNDNRIRIHGLAPDDSTKATAYVLLD
+                     DGTEELVYVTYSNELKEADVTTETTAITSDKSSLDDVQPIGLITSNNEPPKLNSLNDY
+                     IDEFNWHSSADNDYNNVSLELMLNTHHTTLWECDNILVKDVTIKQALKEGVDKQLINT
+                     DSSFDELVTHLRLTAKTIMDPLDEMDNGVKSSDQAVVDQLLNHDRRPGKFSNKMLLPA
+                     IPGINRAERRKLLSKMKKGNF"
+ORIGIN      
+        1 ttaatggcat aagccctccc gcaatgggag ggcattatgt cttttttttt atttttttta
+       61 ttgagcggct gtgattgtcc gaatatgatg tcgcttacct tcaggatcat tgaactgcct
+      121 ggatattttc atccaacgca ttaattgttc ctgatatagt tcttcagcat cggcatattc
+      181 ataaacctta tcacggaata cacctaactc agcaccacct gataactgtg cttcacccat
+      241 agatacaaat aactcattgt agatgtatga cttaacagca tactcaatga gttttgaaaa
+      301 tgcaggtatg gctgtaggtc gtatggtatt tagctcctca tcattaccta cgcgacaggc
+      361 aaggaatgat gagtagttag ggatattgat atacctgacc atgacagtgt gtgggttaat
+      421 taagttgata tatgctgttt gggcgactgg taactgtcta gctgaatcta gtacacgtcg
+      481 tgttaatgca cccatacttg attcattata gtgcatagca tagccagcag tatggaatcc
+      541 taatactcca aaatggatac tgtaacattg gataattggg cgttgctgag tgtattcgtc
+      601 tggaatgtaa taaaccactg tataagggtc aacatattct gcttgcactg gaaaatctag
+      661 tggaatgaat acttttgaac caccgactaa atcaatatct aacataacac gtggttcaat
+      721 aacagcttcg cgtatcctgg tttctagtga gatagctgca ccacagcctg acatttcgct
+      781 agataagaaa acagtattta atatctgttt tgggatctta aaagaaatat cacgtaaagc
+      841 cttagtaatt ggattcataa aaacgtccta taatgcgctg tacgcgtttt ttcgatggag
+      901 ataataccca actaaggtat aatatacatc ggcttaccac gaacagattt gactaaaaat
+      961 atttttagat ctatatcatg ttcctgaaca tttaatgaga gattgtactg tgactactcc
+     1021 ccaagtagct gacctgtatg tagtagatgt aacgagggtg atagccaagt tagtaccaag
+     1081 atcgccaaaa gagctaataa atgctcgttt agcaattagg tgccaaagct ttggaataca
+     1141 tccagatgac tatggtacat tagagcatat atttaaatca gtagaggaca gcttaattga
+     1201 tgacttcttt aaatattcta ttgactcttt tgaattcatg tatactactg gatatagccc
+     1261 aataaataac actcctcaag aaatccaatg gtttcatgat aatcatgaag ccgcatctga
+     1321 tctttgggat atattaaaaa ttatacctag agtaaatgca ggtaagtttg taatattcta
+     1381 tcggttaaag aacacagttt ggatcgctat tccaaaaaat taattggaga aatataatgt
+     1441 cgaataagct cattgtactt gatacgcgcc accaagaaaa agcaatatac gatttactag
+     1501 gtcagcttac agcttcagct tcaattgatg aagcgattgg ggtgaaattg agtaaagatg
+     1561 tggctcaaca gtttttacat ctaatggttg aaaatatagt agagagttta gtttcatata
+     1621 aaacagccaa agaccagtac accaatctta agatggcagc agctattttt aattgtgctg
+     1681 taactgacgt agatagtaat aaagttgctt gggtagaaaa tctaatgaaa ctaccttatc
+     1741 tagaaactat ctatctagat atctataaac aagtagctaa atatatcgat agcggtacat
+     1801 ggatccaatg ggatgtagtt aaagctggtt cagttataac tttaatcagt ggcaaagatt
+     1861 atcgtatcgc ggaatatgat cgtgtccatg ggattgataa tggtgatgat catgcagtgg
+     1921 tatcacttaa cctactgaac ccattaaact atttatttag tgaatttctc cgtatattct
+     1981 tccatggctt tgacagaatt aatttacaaa cactaggtta tagtatctac gaatctaggc
+     2041 gtaaaactca gctatctctt gctaatggtg gtagctatac tttaaataaa gaccacatca
+     2101 ccactaacca tgcatataac atcgcagtag aatatattca agaacagtta actgcattac
+     2161 ttattggtgt aattgttaaa caatatagta atattaaagt atcttatcta atacctaagg
+     2221 ttaaccatga tttctttgca agtttaggac ttgataattt attactattt gaagagaaat
+     2281 atattagccc tctagttagt tctattaaca tggcatattt ttcaaccaga attgagcatg
+     2341 acgttaagta tgaactagag tatcatagct atgtaatttc tgtatacaag aataagaatg
+     2401 caacttatcc tattgagaaa ttagtatttg aatatcaacg tggtgattat ttacctgatg
+     2461 atcagcgagc gcaagctgag cgatacattt tagaaaataa tttatactaa ataaagccct
+     2521 ccttatgggg ggctttatac cgattataag gtttttataa tgaacatatc taatgataaa
+     2581 gacacatcaa tgtgtatcag aatggaagta agatcttttg tacaagatca acattctgat
+     2641 atttggaaat ctataaaaaa tagtattggt gcagaatatg cattaacaat tgtattggca
+     2701 gcagcgtctg agagggcatc aggtagcaca tctaatgatg tcatagaact aattaatcag
+     2761 atgctgggtt atagagatat ttgtgatatt gatttaacaa cttatctgta taattgttct
+     2821 aaccgggtag ttctaccatc agctggtaac atccagttaa atagggttat ttatgatact
+     2881 gagaaaccag aagatctata cgtcaccatt acccacacca caacctcgtt ttttactaag
+     2941 agcgactaaa agtaaactta ttaaagatga taactatcta agatttgtat tagacttttt
+     3001 agatattagt tatatcgaag caatgcattt gcttgtcgca ttggcagaac agaagcttat
+     3061 gcaaatggtc attaaagaag agatgttcta tgaatatgct aaagatattc atttcatgca
+     3121 taaactaata gaacttctcg atgaaggtgc tgagcagatc atgcatctca ttccaacaaa
+     3181 tactaaggaa ctgtggtatg aaacagaagc acgagatgga ttgtacatcg gaggaagtac
+     3241 aacgtctggt atatgtattg ccaatcgaag tggtattccc acaattaatc acattgataa
+     3301 agaaatttac ttacctaaca aataaagatg aagctacagt catcgcctta ttaactcaat
+     3361 gggttgttaa gatgatgtct aaattacaac aggataatac ggttattcct tttgtggata
+     3421 taccaataca actaggaaat ggtccagatt gggatgagtt cattaatttg ttctatacaa
+     3481 ctggaatcca attactacat agaacaccga agaatttaat agactataag ttcattagag
+     3541 taatagataa taaagttgtt ctattaacta tagtcactgg taaagagtgg agtcaatatg
+     3601 caattgttgc taattttgaa accgcgttct tttacggaag agctaggtgt aggtgagccg
+     3661 actgattttg tactatggtg tattaataga cttctagcag catatgtaga atactttaac
+     3721 cactggcaga gattagattg gcctaccttt ttagagcaat ggttagaaga ttacttaagc
+     3781 gatacctata tagaaccaga tagaccgatg agcatgatgg tatttgatca tcagggaaat
+     3841 cctaatacta tcaattggca cttaagatct gctgagatta tcgaaagagt attggattta
+     3901 tttggaactg atttcttaga gataatccaa aaacaagtta ttcaggcagg taatcttatt
+     3961 actagtctta aatgtataga agtagataaa tataagatgg taactaaatt agttatgagg
+     4021 tctcaaacat gatgcatcca cttctttata gacaacaaga aatgcagcgg ataaatgatg
+     4081 ctaataacat aactccaggc caacaaggaa tgacgagttt cgtagttatt aacatcagtg
+     4141 atatctggcc cattgttaat aaaatggctg atgtagttgt caataagtct tacaatactc
+     4201 cttacccata tactgaacac cagtctatag aacaattatg gtatcaggca attaattcat
+     4261 atattgaatt tctagcgcaa cagcctactc aaccaattat aggggttgac tattatttac
+     4321 aagaatactt tccatcggta gcacctgtga ttatgcaaga taaatatgca ttgagtattc
+     4381 ttaatatgtg gtttgcgacc gtgtgtaaaa cattggctag caaactacaa tctgaaatag
+     4441 cacatctcta tcagaatgga tatggtgtag aaagaatcca atcaatagca gttgatcaac
+     4501 ataatcaggg ttatattcta gaaggtgaag actttggtat ggactgttac aatgatgtgg
+     4561 attaagtgac acatattaac aattgacgca aataggaaag cctatcggtt cacataggct
+     4621 tcctactagg aaccgatatg gaaaaacgag tatttatcgt atttaaatct aaagagtcag
+     4681 aagtatattc gcaacatttg cttcgtgaat atacaaaacg aatgatatat ccagattgtc
+     4741 caacaccact tgatttattt gaagaatcac gtaagttaag ttatatggat acgcttaata
+     4801 atgacatata catccatatg ctgatgtatg gacatgactc atttgatgat cctgacgaag
+     4861 atattgagtt agagaattat tctactaaag gatatgttat tgaatattgt accgacttta
+     4921 tcaatagctt taaagaaaaa tatccaaatg gacatgtatt aattacagtg ccaatggata
+     4981 caaaaggtct gtttggtgta gttgtattac tagatgagta ataccctatg taaccaacta
+     5041 ttttagggta ttaccatggc tgttaatatt cgagacattc aagcaggtga taggatctca
+     5101 ttcgaggtct atccatatgc tatcctaggt actaatttta agaacgttac agtcgaaggt
+     5161 attgttactg cgtctgtagc atctgcaatg ggttttgatg tagctgctgc cgggcagcaa
+     5221 gtatatccaa gtttaccagc aggatcagct ccagttgatc caacacaata caattacatt
+     5281 cgtgtacgaa tggccaataa tgaaagtgtg atgtttattg gtatcccttg gattgttgcg
+     5341 aatacattag aacgtgtaga tggtaaacgt ctgacattag tatgggatga tgtcgataat
+     5401 aaaatgtatg atcgcattct attggcagtg cgacaaaata atgcaccacc aacttcagtg
+     5461 acatatgaat aactataaag gagccattat ggctcctttt atgttgtttt atttttactt
+     5521 acttacatca tctaatgtga atgtaagttg atgtgctacc tctcaattta gggtacccgt
+     5581 atagggtacc cattctttcc ttttcttttt tagttaaaaa gagagaaatc attcactata
+     5641 attaaaaaat aagtatactg agagatatgt gaaatgaccg catttgccca accaaatccg
+     5701 tttttaaaag atgtcaatga ttaccatcgt gatattgata tcattaatgc atgtcttgat
+     5761 gataatgcca aatatcttca attaatgaca aaagatgaat taaatattag tttagaagaa
+     5821 tgtaaagaat ttgttaaaga acaattacgt caaaatggtg aatatgcact tcgtaatcca
+     5881 ttagcaacta ttctagataa aaataagttt ggtgataggg aattaaagac ggtttcattt
+     5941 atggcttttc ttaaccgtgt taagaaacag aatctattat tatctccatc aatgaccgca
+     6001 tatttaccag agtctgttag acagtctacg cactccatct atattgccga aggtgtgaaa
+     6061 aaccgtaagc gtgttaaagg tgaacagatg caggctgaac gtgaagcagc tgctttccta
+     6121 caggccggcg ataaagagaa ttcacaaatt aaaacagaac ttgcacaagt acgtaaaggc
+     6181 gagcaagaaa acttcaaaat taacaataac tcatattcag gcggtactgt atctgctgcc
+     6241 actattcttt attataagtc cacacactct agtttaacat ctacctgtag aactggtacc
+     6301 tcttatgcta actcaaataa tgaaaaattc attatgggta ataggcatta ttatactcca
+     6361 gaaatcacaa aagctaattt agtaaacact attaatgtag ctgatatgga gttaattcaa
+     6421 aaagcagtaa ctaattttaa tctacattgc ccaacgccag aagaagtagt tgatatggtt
+     6481 ctttattcaa ctaaacacta ttggcaaaat aagtactaca cggcgcagat tttaaaacta
+     6541 gctactggga tgacaccagt cgaacgagca gcagttatgt acgtaggtga tctatatcac
+     6601 ttatataaat acaataaaga attaatcaag agctttctaa ttaaattaag ccaggttgga
+     6661 acaaaagaac aaatcatcac tgaagaagaa tattcaactt atgatggtga tatggatcta
+     6721 ttggctagct ttatttgctt tgatactgtt aaaggtcgat ctaaagctaa actaaaagag
+     6781 tcagatccag atacattaaa ccaagtttat gccactggtc gaaatatcgc tgaaactctt
+     6841 aatgaatatc gtctattgat tgaagctttc ttcttgacta aatgtgtacc atcaagcatt
+     6901 catgcttttc caactgtgta tagacgagct gctgttattt cagatactga ctccactatg
+     6961 tttacattac aatggtgggt tgaggaattc tttggtaaag taacttttag caatgaagct
+     7021 aagcgactag tattcgcact agtgtttcta gtgtctgaag tagttatgca tatcttggcg
+     7081 attcaatccg ctaatatggg tgtatctaaa gataagcttc gtctatttgc aatgaagaac
+     7141 gaatattatt tcgcagtact ggccttaact actcgttcta aacattactt tgcatcacag
+     7201 gatgcccaag aaggggtaat gtttaatgag tcacgaatgg agatcaaggg tgtaggacta
+     7261 agggatagta aagtacctaa gaagattaat agtcgtgcta aaacactcat ggaagatatc
+     7321 attaaaactg taaagactga agagaaaatc gacttggctt caattctaaa agaagttggt
+     7381 gatatcgaaa gagaaattat tgagtctgtt agaagtggta aagctgagta tctgacaagt
+     7441 ggtcaaacta aacgacctga gtcttataaa tctgaagata actcaaccca taaaaaggga
+     7501 ttagtgtgga agactgtatt tgctccatca tttggtgacg ctggtgatcc accttattca
+     7561 catgtaaaga tctcagttac tcttaataat aaaactgcga tcaaagaatg gattgatggt
+     7621 atcgaagata agaaattagc tgctcgtatt caagcatggg ttactgaaga aaataaaacc
+     7681 agtattggtg atttccatat cccgagtaca gtagtagaaa ctggtcgtat tccagaagtt
+     7741 attacgcgtg ttgctgacgt tagaactatc attggaaata ctatgggtgt attctatcta
+     7801 accttagagt ccctaggtat tttccttatt gataaaaata acgatcgact catctccgac
+     7861 ttctattaag aaatatagcc tcccctagtg ggaggcttat atactaaaaa ataattaaga
+     7921 tttatatagt ctgattgcca attactaact taatatggtt caatataatg acaaatcata
+     7981 ccgaatttaa ttttgactta gatcggatga agaaggcaat taatagcggc actatcacat
+     8041 taccaacagt accatcggga ttaactcgtg aagagaaacg agcttttatc cgaaaatata
+     8101 ttaaagataa attaaaagag gtagatgata atggaaaaga ctaatgaagt tcgtgtaatc
+     8161 acttggaatg attatagtaa attagtaaat gataatcgta ttaggatcca tggattagcc
+     8221 cctgatgatt ccaccaaagc aacagcctat gttcttttgg atgatggtac tgaggaattg
+     8281 gtatatgtaa cttattctaa tgaattaaaa gaagctgatg ttactactga aacaactgca
+     8341 attactagtg ataaaagttc actagatgat gttcaaccaa ttggtttaat tacctctaat
+     8401 aacgaaccac caaagttaaa tagtctaaat gactatatcg atgaattcaa ttggcactca
+     8461 agtgctgaca atgattacaa taatgtctca cttgaattaa tgctaaatac ccatcataca
+     8521 actctttggg aatgtgataa tattctagta aaagacgtaa ctattaaaca agctcttaaa
+     8581 gaaggtgttg at
+//

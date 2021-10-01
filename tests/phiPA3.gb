@@ -1,0 +1,436 @@
+LOCUS       NC_028999               9076 bp    DNA     linear   PHG 20-DEC-2020
+DEFINITION  Pseudomonas phage PhiPA3, complete genome.
+ACCESSION   NC_028999 REGION: 26715..35790
+VERSION     NC_028999.1  GI:971764080
+DBLINK      BioProject: PRJNA485481
+KEYWORDS    RefSeq.
+SOURCE      Pseudomonas phage PhiPA3
+  ORGANISM  Pseudomonas phage PhiPA3
+            Viruses; Duplodnaviria; Heunggongvirae; Uroviricota;
+            Caudoviricetes; Caudovirales; Myoviridae; Phikzvirus; unclassified
+            Phikzvirus.
+REFERENCE   1  (bases 1 to 9076)
+  AUTHORS   Monson,R., Foulds,I., Foweraker,J., Welch,M. and Salmond,G.P.
+  TITLE     The Pseudomonas aeruginosa generalized transducing phage phiPA3 is
+            a new member of the phiKZ-like group of 'jumbo' phages, and infects
+            model laboratory strains and clinical isolates from cystic fibrosis
+            patients
+  JOURNAL   Microbiology (Reading, Engl.) 157 (PT 3), 859-867 (2011)
+   PUBMED   21163841
+REFERENCE   2  (bases 1 to 9076)
+  CONSRTM   NCBI Genome Project
+  TITLE     Direct Submission
+  JOURNAL   Submitted (05-JAN-2016) National Center for Biotechnology
+            Information, NIH, Bethesda, MD 20894, USA
+REFERENCE   3  (bases 1 to 9076)
+  AUTHORS   Monson,R.E., Foulds,I., Foweraker,J., Welch,M. and Salmond,G.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (17-NOV-2010) Department of Biochemistry, University of
+            Cambridge, Tennis Court Road, Cambridge CB2 1QW, United Kingdom
+COMMENT     PROVISIONAL REFSEQ: This record has not yet been subject to final
+            NCBI review. The reference sequence is identical to HQ630627.
+            COMPLETENESS: full length.
+FEATURES             Location/Qualifiers
+     source          1..9076
+                     /organism="Pseudomonas phage PhiPA3"
+                     /mol_type="genomic DNA"
+                     /host="Pseudomonas aeruginosa strain PAO1"
+                     /db_xref="taxon:998086"
+     gene            complement(<1..688)
+                     /gene="037"
+                     /locus_tag="AVT69_gp038"
+                     /db_xref="GeneID:26643568"
+     CDS             complement(<1..688)
+                     /gene="037"
+                     /locus_tag="AVT69_gp038"
+                     /note="similar to gp042 in Pseudomonas phage phiKZ, gp73,
+                     Pseudomonas phage 201phi2-1, PPEV_gp014 Pseudomonas phage
+                     EL"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="hypothetical protein"
+                     /protein_id="YP_009217120.1"
+                     /db_xref="GI:971764118"
+                     /db_xref="GeneID:26643568"
+                     /translation="MNAIQHALSDLKFRIPKQILEQVFISQDMNACGAAVSLEHRIRE
+                     MVIEARVMPDINLIGGSKTYIPLDFPVKSEYVDPYTVVYYIPDEYTQQRPIVQVFSIH
+                     FGLLGYQNSGYAMHYNESSMGAETRKVLDAARRLPVAQTSYISLINHNTVMVRFIYLP
+                     SHAAYLACRLGNDDELLNIRPQSIKPFSKLVEYAVKAYCYNELYIQMAEAQLSGGQEL
+                     GVFRDKVYEWAEANDLYDEELKRWRKISRNFNDPEGNRHHIRTIMAAP"
+     gene            837..1286
+                     /gene="038"
+                     /locus_tag="AVT69_gp039"
+                     /db_xref="GeneID:26643569"
+     CDS             837..1286
+                     /gene="038"
+                     /locus_tag="AVT69_gp039"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="hypothetical protein"
+                     /protein_id="YP_009217121.1"
+                     /db_xref="GI:971764119"
+                     /db_xref="GeneID:26643569"
+                     /translation="MNIHETLTTEREKEIIDRVLDGKGFDLHAFDIGLVLSELKNHEF
+                     RTFVLERVKASIGMDDIEIGHALATHTELLIDEMLMQIIETFEQCYVARITRFLTREE
+                     MAWLATSVPAMRAAKLLYETLVIPDSASGRFVRMQRVGTTLYLVYPN"
+     gene            1304..2317
+                     /gene="039"
+                     /locus_tag="AVT69_gp040"
+                     /db_xref="GeneID:26643570"
+     CDS             1304..2317
+                     /gene="039"
+                     /locus_tag="AVT69_gp040"
+                     /note="similar to hypothetical protein gp75 in Pseudomonas
+                     phage 201phi2-1, gp043 Pseudomonas phage phiKZ"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="hypothetical protein"
+                     /protein_id="YP_009217122.1"
+                     /db_xref="GI:971764120"
+                     /db_xref="GeneID:26643570"
+                     /translation="MSKRFVMLETQPQVELVHEYLRHFISVNPAAGLPVANKTTALKV
+                     VFSLVENLLIGRSAFEDEYNLDVKVAAAIYGLAETGLKDKHFKTAQLFMDNPLFDGII
+                     QDLDTQLDPHIERRTYTIWKVIQFAGVIGIAEGEDHRISEYYRLTDQNNGDDNAVLAL
+                     NCQNLVSFLMTEFIKSFNAVLSDPRTAQRIAALYSNDEKQMLRMLNELAHPYRQVIAL
+                     FLDTLTTMYPMVELAPECPQLNEDFFAVIGLININEFKQNYVRKVIAAFGLSYFSAYL
+                     KKDKRYLLEYSAANIMALYEQTITNKTEKDMHQLLQSLINGDYLPPEERAIAERLYQE
+                     SNR"
+     gene            2360..2773
+                     /gene="040"
+                     /locus_tag="AVT69_gp041"
+                     /db_xref="GeneID:26643571"
+     CDS             2360..2773
+                     /gene="040"
+                     /locus_tag="AVT69_gp041"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="hypothetical protein"
+                     /protein_id="YP_009217123.1"
+                     /db_xref="GI:971764121"
+                     /db_xref="GeneID:26643571"
+                     /translation="MNSLAIYIDAYEYVRFLDPGYIFAAAALGRDPLIEIIGSIACAR
+                     SFDDVGDLDHEESIRLFLGYHSWDGNDEETEIIVDHIMTCARSIKAYIPDVGVTVLKK
+                     VIWDTLHEGGVLPKDKVLLLVNHYDEKEYTGEVVP"
+     gene            2835..3101
+                     /gene="041"
+                     /locus_tag="AVT69_gp042"
+                     /db_xref="GeneID:26643572"
+     CDS             2835..3101
+                     /gene="041"
+                     /locus_tag="AVT69_gp042"
+                     /note="similar to gp77 in Pseudomonas phage 201phi2-1"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="2-amino-3-ketobutyrate coenzyme A ligase"
+                     /protein_id="YP_009217124.1"
+                     /db_xref="GI:971764122"
+                     /db_xref="GeneID:26643572"
+                     /translation="MSDLYSFVLQVADLYLSREQIYDEHELVEVFFMGRSEAWDFLKQ
+                     IEKQLPEIMSFFPDRVQEIRYLRTMDNGVYAIGSYTTDLPTGQS"
+     gene            3055..3528
+                     /gene="042"
+                     /locus_tag="AVT69_gp043"
+                     /db_xref="GeneID:26643573"
+     CDS             3055..3528
+                     /gene="042"
+                     /locus_tag="AVT69_gp043"
+                     /note="similar to gp045 in Pseudomonas phage phiKZ"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="hypothetical protein"
+                     /protein_id="YP_009217125.1"
+                     /db_xref="GI:971764123"
+                     /db_xref="GeneID:26643573"
+                     /translation="MQSDLTQLIYRLDKANYFPHYEELEKLYRQVYLIKKTFSGYGPG
+                     GVFDDVIQWVKEASSRLSIDPKTIPTDLVIPNLTSSGKRAERYRELFLEAAISLLRLL
+                     PRGLIDLFPVMSKGDAIVFLLTFTGRTFLQHEIVASFRVEDFCNTTDKRGRSKVS"
+     gene            3617..3886
+                     /gene="043"
+                     /locus_tag="AVT69_gp044"
+                     /db_xref="GeneID:26643574"
+     CDS             3617..3886
+                     /gene="043"
+                     /locus_tag="AVT69_gp044"
+                     /note="similar to gp78 in Pseudomonas phage 201phi2-1"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="hypothetical protein"
+                     /protein_id="YP_009217126.1"
+                     /db_xref="GI:971764124"
+                     /db_xref="GeneID:26643574"
+                     /translation="MEDAYLALIMDESLSLPTIDEDGVITNLRLRFRELIEVLANGYT
+                     DELAATLRGFTSSGEKIVTIDVVGYDKYKLTLLVTTEVPKHVEQS"
+     gene            3870..4382
+                     /gene="044"
+                     /locus_tag="AVT69_gp045"
+                     /db_xref="GeneID:26643575"
+     CDS             3870..4382
+                     /gene="044"
+                     /locus_tag="AVT69_gp045"
+                     /note="similar to gp79 in Pseudomonas phage 201phi2-1,
+                     gp047 Pseudomonas phage phiKZ"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="hypothetical protein"
+                     /protein_id="YP_009217127.1"
+                     /db_xref="GI:971764125"
+                     /db_xref="GeneID:26643575"
+                     /translation="MSNNPEQIVLPEYNVGVMVDHKDIDTHLTRMCDVIRNVALQTFV
+                     PKDENDEIMPEDSVKVLLHTCVNEYMQYVFSQPPKVNMPFVNYLDEHFARVAEPIKND
+                     PQKLNYLETKFAQACGAVGNCLIPAANELAQQGYAVEQVQNFHVGYNNTYYVLTGEDF
+                     GIEAEMDENS"
+     gene            4382..4834
+                     /gene="045"
+                     /locus_tag="AVT69_gp046"
+                     /db_xref="GeneID:26643576"
+     CDS             4382..4834
+                     /gene="045"
+                     /locus_tag="AVT69_gp046"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="hypothetical protein"
+                     /protein_id="YP_009217128.1"
+                     /db_xref="GI:971764126"
+                     /db_xref="GeneID:26643576"
+                     /translation="MDNKTHYELVVLGSISGAQLAEWFRLKFYQDHLAEEHDATELED
+                     LMGMMRRRKKHTIGEIRKNILHFFQRTVMTNFGETILETAANLEDLLDDDDHSVVMTY
+                     KTYKEFKLNNPFLDVVAMFPLDMNGTFGFVVCRNNMTADSFRTLTHGN"
+     gene            4824..5234
+                     /gene="046"
+                     /locus_tag="AVT69_gp047"
+                     /db_xref="GeneID:26643577"
+     CDS             4824..5234
+                     /gene="046"
+                     /locus_tag="AVT69_gp047"
+                     /note="similar to gp81 in Pseudomonas phage 201phi2-1,
+                     gp049 Pseudomonas phage phiKZ, PPEV_gp020 Pseudomonas
+                     phage EL"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="hypothetical protein"
+                     /protein_id="YP_009217129.1"
+                     /db_xref="GI:971764127"
+                     /db_xref="GeneID:26643577"
+                     /translation="MAIDIQTVPIGTKISFELYPSSQYGNNFQNVTLAATMDSRLAQK
+                     LGFDPIAAHQNVWPSLPSGVPNDATQYNYFQVDFDNGSSQILGIPWIRADSLTIHNGK
+                     TLTLVFEDIDETRKDRIIKAVKAQNENPSSVTFV"
+     gene            5419..7569
+                     /gene="047"
+                     /locus_tag="AVT69_gp048"
+                     /db_xref="GeneID:26643578"
+     CDS             5419..7569
+                     /gene="047"
+                     /locus_tag="AVT69_gp048"
+                     /note="similar to gp83 in Pseudomonas phage 201phi2-1,
+                     gp050 Pseudomonas phage phiKZ, PPEV_gp021 Pseudomonas
+                     phage EL"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="hypothetical protein"
+                     /protein_id="YP_009217130.1"
+                     /db_xref="GI:971764128"
+                     /db_xref="GeneID:26643578"
+                     /translation="MGTQFQPNPFIRPVDEYCRDLEIIDAYLNDQALYLSAMTGDPVE
+                     QCLEFVKAQSRPEGAMALQNPKALILDKNPAGDRELKETTFMGFLNRVKKQELLLSPS
+                     MTVYMPESQRQSTHSQYIAEGVANRKRVKKEQMRLEGEGTTEALELAQVRKGEQENFK
+                     INNNSYSGATVSAATILYYKSTHSSLTSTCRTATSYANANNEKFIMGNRHYYTPEITK
+                     ANLLSIANITDLKKLQECMDHFQMHYPTADEVVEMVLRSTAHYWQNQDYTAQIHTMVS
+                     GFTPLQRAAVVYVGDLYHTYKHNKDLIRNFLMELSQIGRPDQVISKEEYNTYDGDMDL
+                     LANFICYDLVKGRNKEKLAAENPEVFDTIYATGKNISEVLHKYKLIIEALLLTNNVPS
+                     SIHAFPTIYRRAAVISDTDSTMFTMQYWVEEFFGRVCFTSEAKRLVFALVFLVSEVVM
+                     HILAIQSANMGVSKEKLRLLAMKNEYYFAVLSLTTRSKHYYASQDAQEGVMFAKARME
+                     VKGVGLRDSKVPPKINKAAKKMMENIIKSVKEEIPLDLPAMLKEVADFERDIINSIFS
+                     GKSEYLTTGKCKKLNAYKSEDNATYAKHRFWAEVFGPSYGGTEEPPYSFVKVSVTVDN
+                     RTRFNEWVESIEDKGLAMRLKKWAMENDKSGITTFHVPMTVVENHGIPSEITRVADVR
+                     TVISNTMGVFYLILESLGIFLIDKDNSRLISDFY"
+     gene            7583..7930
+                     /gene="048"
+                     /locus_tag="AVT69_gp049"
+                     /db_xref="GeneID:26643579"
+     CDS             7583..7930
+                     /gene="048"
+                     /locus_tag="AVT69_gp049"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="hypothetical protein"
+                     /protein_id="YP_009217131.1"
+                     /db_xref="GI:971764129"
+                     /db_xref="GeneID:26643579"
+                     /translation="MKGQEYIAKKGDAVKVIFHSGIGSINAGRIKLDKEYDATISYFS
+                     DKATHMMFSFTREDGEKGELMRHVTGSDTTWTLILTEDEARRRKQKVIQRRTKQAEDQ
+                     CKRKIIEANMLFD"
+     gene            7976..>9076
+                     /gene="049"
+                     /locus_tag="AVT69_gp050"
+                     /db_xref="GeneID:26643580"
+     CDS             7976..>9076
+                     /gene="049"
+                     /locus_tag="AVT69_gp050"
+                     /note="similar to gp88 in Pseudomonas phage 201phi2-1"
+                     /codon_start=1
+                     /transl_table=11
+                     /product="hypothetical protein"
+                     /protein_id="YP_009217132.1"
+                     /db_xref="GI:971764130"
+                     /db_xref="GeneID:26643580"
+                     /translation="MIEQRSAYEEAVLHGFKGSQDDWFRSLEGRKHPYDTLDTVVNAS
+                     QAHFDYIASKIAPGMSSLFIEQKFDLALDEKNYLDKVVELYNDECSDLDNADRARLFN
+                     MVKAARYLIKGIIYGRPYSQPRLLEAWAQCPKSRFDYFKDKVPRYDTECTQVHPDIDL
+                     TWRLNKGKDMQASQNTLRGQTSSITHMDDAMFMSTHKIPELLTPVEEISTADVPPANQ
+                     SIPQGNRKERRIAGKKQKNKRKKHIANCKSGFHKAVMGSMVLSRLGRVQQDTQDNLKK
+                     ALLKDHAMADVVEAATGEKLPAYQRNLLNQMQERAQHGKSIVEEHERLVSEEDAEMFV
+                     NKGVPEEVLDGQFNLVPAGDSSAEESDEGLEVDDGVADRD"
+ORIGIN      
+        1 cagcccattc gtaaacttta tcacggaata cgccaagctc ttggccacct gaaagttgag
+       61 cctcggccat ctgaatatac agttcattgt agcaataagc tttaacagcg tattctacca
+      121 gcttactgaa cggtttgatg gattgaggac ggatattaag tagttcatca tcattaccca
+      181 gccggcaggc caaatacgca gcgtgactag gtaaataaat gaacctaacc ataaccgtat
+      241 tatggttgat caggctgatg tacgatgttt gtgctactgg gagtcgcctt gcagcatcca
+      301 gaacctttcg agtttcagca cccatgctcg attcgttata atgcatggca taaccagagt
+      361 tctgataacc cagcaaccca aagtgtatac tgaatacctg aacgatcgga cgttgttggg
+      421 tgtactcatc ggggatgtag tacacgacag tgtaaggatc aacgtattca gacttgacgg
+      481 gaaagtccag tgggatgtat gttttagaac caccaatcaa gttaatgtcg ggcattaccc
+      541 gcgcttcaat caccatttca cgaatacgat gttccagtga tacggctgca ccacaagcat
+      601 tcatgtcttg gctaataaat acttgttcta gaatctgttt tgggattctg aacttcaggt
+      661 cagagagtgc atgttgaata gcattcattt taacggcctc taaggcccct tcctgaggcg
+      721 atcgtacggg agataatacc tacaatgggt atagtatacg aacgcctaaa ttcggggcat
+      781 tacaaaagat ttcaaatcta tatcatgatc ctgaagaaat tcttggaaga cttcaaatga
+      841 acattcacga aactttaaca acagagcgtg aaaaggagat catcgatcgt gtcctcgatg
+      901 gaaaaggttt cgacctccat gcgttcgata ttggtctggt gttatctgaa ctgaagaacc
+      961 acgagttccg tacctttgtt ctggagcgag taaaggccag tatcggtatg gacgatatcg
+     1021 aaatcgggca tgcccttgct acgcacactg agctgctcat cgacgagatg ttgatgcaga
+     1081 ttatcgaaac atttgaacag tgctacgtag ccagaatcac tcgattcttg acccgtgaag
+     1141 aaatggcctg gttggcaact tcggtacctg ccatgcgggc agctaaactg ttgtatgaaa
+     1201 cactcgtaat cccagattcg gcgtcaggtc gtttcgtccg tatgcaacgg gtaggaacga
+     1261 ctctatacct ggtctaccct aattagccaa ttggagcact acaatgtcta agcggtttgt
+     1321 tatgctggaa actcagcctc aggttgaatt ggtgcatgaa tacctgcgcc acttcatctc
+     1381 tgtaaatccg gctgctgggt tgccagtagc taacaaaact actgccctca aggtcgtctt
+     1441 tagtttggtg gaaaacctac tgatcggacg cagtgcgttc gaagacgaat acaaccttga
+     1501 tgtaaaagtc gcagcggcaa tctacgggct tgccgagact ggtcttaagg acaagcattt
+     1561 caaaacagca caattgttca tggataatcc gttgtttgat ggtattatcc aagacctgga
+     1621 tacccagctc gatccacata ttgaacgacg tacttacacc atatggaaag tcattcagtt
+     1681 cgccggtgtg atcggtatag ctgaaggtga agaccatcgt atcagtgaat actatcgact
+     1741 gaccgatcag aacaacggtg acgataatgc ggtgctggca ttgaactgtc agaacctcgt
+     1801 ttcgttcctg atgactgagt tcataaagag tttcaatgcg gtcttaagtg acccacgtac
+     1861 tgctcagcgt attgcagcgt tgtatagcaa cgacgaaaaa caaatgctgc ggatgctgaa
+     1921 cgagctggct cacccgtatc gacaagttat cgccttgttc ttagatacgt tgactaccat
+     1981 gtatcccatg gttgagttgg ctccggagtg tcctcagctc aatgaagact tctttgcagt
+     2041 gatcgggctg atcaacatca atgagttcaa acagaactac gtgcgcaaag tcattgcggc
+     2101 atttggtctg tcgtacttca gtgcttacct caagaaagac aaacgctacc tactggaata
+     2161 cagcgctgct aacatcatgg cattgtacga gcaaacgatc accaacaaga cggagaaaga
+     2221 tatgcatcaa ctgctgcaat ctctgatcaa tggggattac ctgcctccgg aagaacgagc
+     2281 tatcgccgaa cgtctatatc aggaaagcaa tcgataacat ggagcccagc ttcggctggg
+     2341 ctttatgcgc ggagcccaaa tgaacagtct agccatctat atagacgctt acgagtatgt
+     2401 ccggttttta gatcccggtt acatctttgc tgccgccgct ttggggcgtg atcctctaat
+     2461 cgagatcatt ggtagtattg catgtgctag atcttttgac gatgtaggtg acctcgacca
+     2521 cgaggaatcc attcgtttat ttctaggtta ccacagttgg gatggtaatg atgaagaaac
+     2581 cgaaatcatc gtagaccaca tcatgacctg tgccagaagt atcaaggctt acattccgga
+     2641 tgttggagtg acggtcttga agaaagtgat atgggatacg ctacatgaag gtggcgtact
+     2701 acccaaggat aaagtcctac tgttggtgaa tcactatgac gagaaagaat atactggtga
+     2761 ggttgtcccc tgagatcctg attggagaag ataaggtcca agctgaactg ctttccgacc
+     2821 tgacaggcat cagtatgtca gatctgtaca gctttgtttt acaagtggca gatctttatt
+     2881 taagtagaga acaaatctac gacgagcatg aactcgtgga agtgttcttc atgggtcgaa
+     2941 gcgaagcttg ggatttccta aagcaaatcg aaaaacagct acctgaaatt atgtcgttct
+     3001 tcccagatcg tgtacaagaa atcaggtacc tgcgaactat ggataacggc gtctatgcaa
+     3061 tcggatctta cacaactgat ctaccgactg gacaaagcta actattttcc tcactacgag
+     3121 gaattagaga aactttaccg acaggtgtac ctgatcaaga aaacgttcag tggttacggc
+     3181 cctggcggcg tgttcgatga tgtaattcaa tgggtcaagg aagcctccag tagactctct
+     3241 attgatccta agacaatccc cacggatttg gtcataccta atctaaccag cagcgggaag
+     3301 cgagctgagc gttatcggga actgttcctg gaagctgcaa tctctctcct gcggttatta
+     3361 ccacggggat tgattgacct gtttccagtc atgtccaaag gtgacgctat cgtctttctg
+     3421 ctgactttca ccggcaggac ttttttacaa catgaaatcg ttgctagttt tcgagtcgaa
+     3481 gacttttgta acacaactga caaaagagga agatccaagg ttagttaagc atgtactgca
+     3541 tcaatacctg gagtgcatcg ttctacattc gaagtattct acaccgccac cttggggtgc
+     3601 gttctttgaa accttcatgg aagatgccta tctcgcgttg ataatggatg agagcctcag
+     3661 tttacccaca atcgatgaag atggcgtcat taccaatcta agacttcgtt ttcgtgaatt
+     3721 aatcgaggtt ttagccaatg gttacactga tgaacttgct gcaacattac gtggattcac
+     3781 gtctagcggt gagaaaatag ttaccattga tgtagtaggt tatgacaaat acaaactcac
+     3841 cctgttggta actaccgagg ttcccaaaca tgtcgaacaa tcctgaacag atagttctcc
+     3901 ccgagtacaa tgtcggggtg atggttgacc acaaagatat cgacacccat ctcaccagaa
+     3961 tgtgcgatgt cattcgtaac gtggctttac agaccttcgt ccccaaagac gaaaacgacg
+     4021 agatcatgcc agaggactcc gttaaagtac ttctacatac ctgtgtaaat gagtacatgc
+     4081 agtatgtgtt ctctcaacca ccaaaggtca acatgccctt cgtaaactac ctggacgaac
+     4141 atttcgctcg ggtagctgag ccaattaaga acgacccaca gaaactgaac tatctggaaa
+     4201 ccaagtttgc tcaggcgtgt ggtgccgtag gtaattgctt gattccagca gccaatgagc
+     4261 tggctcaaca aggttatgcc gtagagcagg tacagaactt ccacgtgggt tataacaaca
+     4321 cttactacgt tctgacgggt gaagatttcg gcattgaagc tgagatggat gaaaatagct
+     4381 aatggataac aaaactcact atgaactggt ggttcttggg agtatctctg gcgctcagct
+     4441 agctgagtgg tttcgcctta aattctacca agaccaccta gcggaagaac acgacgccac
+     4501 tgaactcgaa gatctcatgg gtatgatgcg gcgccgcaaa aaacacacaa taggagaaat
+     4561 cagaaagaac atcctgcatt ttttccaacg tacagtgatg accaacttcg gggaaaccat
+     4621 actggaaacc gctgcaaact tggaagacct gttggacgac gatgatcatt cggtggtgat
+     4681 gacatacaaa acctacaagg aatttaagct caataaccca ttcctggatg ttgttgccat
+     4741 gttccctttg gacatgaatg ggacctttgg gttcgtggtc tgtcgtaaca atatgaccgc
+     4801 agattcgttc aggaccctga cccatggcaa ttgatattca gacggtccct attgggacca
+     4861 agatctcctt tgaactttac ccgtcgtccc aatatggtaa caacttccag aacgtaacgc
+     4921 tagcagctac gatggattct cgcctggccc aaaagctggg ctttgatcct atagcagcac
+     4981 atcaaaacgt atggccctca ctaccatctg gtgtaccgaa cgacgccact cagtacaatt
+     5041 acttccaagt cgacttcgat aatggtagta gtcaaatcct gggtattcca tggattcgtg
+     5101 ctgactcgtt gactattcac aacggtaaaa cgttgacact ggtcttcgag gatattgacg
+     5161 aaacgcgtaa agaccgcatc atcaaagcgg ttaaagcgca gaacgagaac ccgtcatcgg
+     5221 taacgttcgt gtgaaatata gcccctcctt cgggaggggc tatatgtcgt taaagtttta
+     5281 cctgcgtgct tctccctatg tgaatgtaat ttgatgtgta accaattgag cctttggaca
+     5341 ccttagggtg tccttatttt tccagtcgct cagaacacat tacattctaa gaattagaaa
+     5401 ttcattgagg ggcaagtgat gggcacgcaa ttccaaccga atccttttat tcgtccggtc
+     5461 gacgagtatt gtcgtgatct ggagatcatc gatgcgtatc taaacgacca agcattgtat
+     5521 ctgtctgcca tgacagggga tccggtagaa caatgccttg agtttgtaaa ggctcaatct
+     5581 cgtcctgagg gagcaatggc acttcagaat ccgaaggcct tgatcctaga taagaatccc
+     5641 gcaggtgacc gtgaactgaa agaaactacg ttcatgggtt tcctgaatcg agtgaagaag
+     5701 caagaactct tgttatcgcc gagcatgact gtgtacatgc cggaatcgca acgtcagtct
+     5761 acacactcgc aatacattgc cgaaggcgtg gctaaccgca aacgcgtaaa gaaagaacaa
+     5821 atgcgtttgg aaggtgaagg taccactgaa gcactcgaat tagcccaggt tcgtaaaggc
+     5881 gaacaagaga acttcaaaat taacaataac tcttacagtg gggcaactgt aagtgcggca
+     5941 actattctgt actacaagtc gactcactcg tctctgacgt ccacttgccg taccgcaacc
+     6001 tcgtatgcga acgccaacaa cgagaagttc atcatgggga accggcacta ctacacgccg
+     6061 gagatcacca aagccaacct gctgtcgatt gccaacatca ccgaccttaa gaagctgcaa
+     6121 gagtgcatgg atcacttcca gatgcattat ccgaccgctg acgaagtcgt tgagatggta
+     6181 ctgcgttcga ctgcacacta ctggcagaac caagattaca ctgcccagat ccacaccatg
+     6241 gttagtggct tcactccact gcaacgagct gctgttgttt atgtcggtga tctgtaccac
+     6301 acctacaaac acaacaaaga tctgatccga aacttcctga tggaactgtc tcaaatcgga
+     6361 cggcctgatc aagttatttc caaggaagaa tacaatactt acgatggcga catggatctg
+     6421 ctggctaact tcatttgcta tgatctggtt aaaggtcgta acaaagagaa actggcagcc
+     6481 gagaacccgg aagtgtttga caccatctac gctactggta agaatatttc ggaagtcttg
+     6541 cacaagtaca agttgatcat tgaagcattg cttttgacca ataacgttcc atctagtatt
+     6601 catgccttcc cgactattta tcgtcgcgca gcagtgattt ctgacactga ctcaaccatg
+     6661 ttcaccatgc agtattgggt ggaagagttc tttggtcgtg tctgctttac ttcggaagct
+     6721 aaacgtctgg tgttcgcact ggtgttcttg gtatctgaag tagtgatgca catcctggcg
+     6781 attcaatcgg ccaatatggg tgtatccaaa gagaagcttc gtctgctggc gatgaagaac
+     6841 gaatactact ttgctgtact gtcattgacc acacgttcca aacactatta cgcatcccag
+     6901 gatgcgcagg agggcgtaat gttcgctaaa gcgcgaatgg aagtgaaggg tgtcggtctt
+     6961 cgtgactcta aggtaccccc gaagatcaac aaggctgcga agaagatgat ggagaacatc
+     7021 atcaaatcgg ttaaggaaga gatcccattg gatctcccag caatgttgaa agaagtggct
+     7081 gatttcgaac gtgacatcat caactcgatc ttctcgggta aatctgaata cctgaccacc
+     7141 ggtaagtgta agaagcttaa cgcgtataag tcagaagaca acgctacgta cgctaaacac
+     7201 cgattctggg ctgaggtatt tggtccgtct tatggtggca ctgaagaacc accttactcg
+     7261 ttcgttaagg tatcggttac cgtcgataac cgtactcgct tcaacgaatg ggtagagtcc
+     7321 atcgaagata aaggtctggc gatgcgcctg aagaaatggg ctatggaaaa cgataagtcc
+     7381 ggcatcacca cgttccacgt accaatgacc gttgtagaga accatggtat cccgagtgag
+     7441 attactcgtg tggcggatgt acgtactgta atctccaaca ccatgggtgt gttctacctg
+     7501 atactcgaat cgctggggat cttcctcatc gacaaagata actcccgtct gatctctgac
+     7561 ttttattaat aggtaccctg aagtgaaagg tcaagaatac attgccaaaa agggtgatgc
+     7621 cgttaaggtt attttccatt cgggtatagg ttctattaat gcaggacgca ttaagttaga
+     7681 caaagaatac gatgctacga tttcttactt ctcggataaa gctacgcaca tgatgtttag
+     7741 ctttactagg gaggacggtg agaaaggtga gttgatgcgc cacgttactg gtagcgatac
+     7801 tacatggacg ctcattctga cagaagacga ggcacggcgc cgtaaacaaa aggtcattca
+     7861 acgtcgtact aaacaggccg aagatcaatg caaacgcaag atcattgaag ccaacatgtt
+     7921 gttcgattaa cataagggga gcttcggctc ccacttatgc cattaggtga atacaatgat
+     7981 tgaacaaaga agcgcttacg aagaagctgt attacacggc ttcaaaggtt ctcaggatga
+     8041 ttggttccgt agcttagagg gacgtaagca tccgtacgac acgctggata cagtggtcaa
+     8101 tgcttcgcag gcacacttcg attacatcgc tagtaaaata gcaccaggga tgagtagcct
+     8161 gtttatcgaa cagaagttcg acctcgccct agatgaaaag aactacctcg acaaagtcgt
+     8221 tgaactctac aacgacgaat gctcggatct ggataacgcc gaccgtgctc gtcttttcaa
+     8281 catggtcaag gcagctcgtt acctgatcaa aggcattatc tacggacgtc cctactccca
+     8341 accccgttta ctagaagctt gggcacaatg tccgaagagt cgttttgact atttcaagga
+     8401 taaagtaccc aggtacgata ccgaatgtac acaggtacac cctgatatcg atctcacatg
+     8461 gcgtcttaac aaaggaaaag acatgcaagc ttctcagaac actcttcgtg gccaaacctc
+     8521 aagcatcacc cacatggacg acgctatgtt tatgtctacc cacaagatac ctgaactcct
+     8581 gaccccggtc gaagagattt ccaccgctga cgtacccccg gcaaatcagt ctattcctca
+     8641 gggtaaccgt aaggaacgtc gtatcgctgg taagaaacaa aagaacaaac gcaagaaaca
+     8701 catcgccaac tgtaagtctg gtttccacaa agcagtaatg ggttctatgg tcctcagtcg
+     8761 ccttggtcgt gtccaacaag atacccaaga caacctgaag aaagccctgc tcaaagacca
+     8821 tgccatggct gatgtcgtgg aagcggccac cggtgagaag ctcccagctt atcaacgtaa
+     8881 tctgttgaac caaatgcaag agcgtgctca gcatggtaaa tcgatcgtcg aagaacacga
+     8941 aagactggtc agcgaagagg atgccgaaat gttcgtcaat aagggagtcc ctgaggaagt
+     9001 cctcgatggg cagtttaatc tggtaccagc tggagatagc agcgcagaag agtctgacga
+     9061 aggactggaa gtagac
+//
