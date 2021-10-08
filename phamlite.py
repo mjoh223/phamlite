@@ -4,7 +4,6 @@ from dash import dcc
 from dash import html
 from dash.dependencies import Input, Output, State
 import pandas as pd
-print(pd.__version__)
 from Bio import SeqIO, SeqUtils
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
@@ -29,9 +28,8 @@ import json
 import numpy as np
 from colour import Color
 
-#binb = '/home/jbd_apps/dash_app/app_env/bin'
-#external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-app = dash.Dash(__name__)#, external_stylesheets=external_stylesheets)
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 server = app.server
 def makedir(f):
     directories = ['tmp','faa','fna','blast_out','cluster_data','cluster_out']
@@ -406,8 +404,9 @@ def defaultFig():
     return fig
 
 def layout():
-    layout = dbc.Container([
-        html.H1('phamlite'),
+    layout = html.Div([
+    dbc.Row(dbc.Col(html.H1('phamlite'),width=4),justify="center"),
+    dbc.Row([
         html.Div([
              dcc.Upload(
             id='upload-data',
@@ -440,48 +439,16 @@ def layout():
                 figure = defaultFig(),
                  ),)
             ])
-        ],className='mt-4')
+        ],className='mt-4')])
     return layout
 #if __name__ == '__main__':
 app.layout = layout()
 
-def global_load_syn_trace(self, blast_di, order, phages, current_h=0):
-    shade_trace_list, boundary_left_list, boundary_right_list = [], [], []
-    for comparison, matches in blast_di.items():
-        if len(matches) > 0 and self.accessions in comparison:
-            for match in matches.itertuples():
-                try:
-                    target_h = [x[1] for x in order if x[0] in match.subject][0]
-                    source_h = [x[1] for x in order if x[0] in match.query][0]
-                except:
-                    break
-                if abs(target_h - source_h) > 1:
-                    break
-                source, target = match.query, match.subject #am i the source or the target?
-                if self.accessions in source:
-                    self.whoami = 'source'
-                else:
-                    self.whoami = 'target'
-                source_start, source_end, target_start, target_end, percent_id = match.q_start,match.q_end,match.s_start,match.s_end,match.identity
-                shade = 'purple'
-                if percent_id > 90:
-                    shade = 'green'
-                end = len(self.fna)
-                x=(source_start, target_start, target_end, source_end, source_start)
-                y=(source_h, target_h, target_h, source_h, source_h)
-                shade_trace = go.Scatter(x=x,y=y,marker=dict(size=1),fill='toself',fillcolor=shade,line_color=shade,opacity=.1,text='{}%'.format(percent_id),hoverinfo='text')
-                shade_trace_list.append(shade_trace)
-                x=(source_start, target_start, target_end, source_end, source_start)
-                y=(source_h, target_h, target_h, source_h, source_h)
-                shade_trace = go.Scatter(x=x,y=y,marker=dict(size=1),fill='toself',fillcolor=shade,line_color=shade,opacity=.1,text='{}%'.format(percent_id),hoverinfo='text')
-                shade_trace_list.append(shade_trace)
-    return shade_trace_list#, boundary_left_list, boundary_right_list
-
 @app.callback([Output('dropdown','options'),
            Output('dropdown','value'),
-           Output('hidden_pham_df','children'),
-           Output('hidden_phages','children'),
-           Output('hidden_blast_di','children')],
+           Output('hidden_pham_df','data'),
+           Output('hidden_phages','data'),
+           Output('hidden_blast_di','data')],
           [Input('upload-data','contents')],
           [State('upload-data','filename'),
            State('upload-data','last_modified')])
@@ -520,9 +487,9 @@ def load_dropdown(list_of_contents, list_of_names, list_of_dates):
 
 @app.callback(Output('phamlite', 'figure'),
               [Input('dropdown', 'value'),
-               Input('hidden_pham_df','children'),
-               Input('hidden_phages','children'),
-               Input('hidden_blast_di','children')])
+               Input('hidden_pham_df','data'),
+               Input('hidden_phages','data'),
+               Input('hidden_blast_di','data')])
 def update_output(selected_order, pham_df, phages, blast_di):
     pham_df = pd.read_json(pham_df)
     phages = jsonpickle.decode(phages)
@@ -531,4 +498,4 @@ def update_output(selected_order, pham_df, phages, blast_di):
     fig = graphing(pham_df, phages, blast_di, selected_order)
     return fig
 
-app.run_server(host="0.0.0.0", port="8050")
+app.run_server(host="0.0.0.0", port="8050", debug=True)
