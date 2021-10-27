@@ -47,30 +47,7 @@ class Locus:
         self.filename = filename
         self.phams = []
         self.gc_skew = []
-        self.element_type = self.annotations['taxonomy'][0].lower()
         self.accessions = self.annotations['accessions'][0]
-    def load_gc_trace(self, z, window):
-        trace_list = []
-        self.gc_skew = SeqUtils.GC_skew(self.fna, window)
-        length = int(len(self.fna))
-        bin_size = int(200000 /window)
-        red = Color("red")
-        blue = Color("blue")
-        color_scale = list(red.range_to(blue, 1000))
-        for i, b in enumerate( range(0, length, bin_size) ):
-            print(self.gc_skew[i])
-            if self.gc_skew[i] > 0:
-                color = 'blue'
-            else:
-                color= 'red'
-            x, y = draw_shape(b, b+bin_size, 'nostrand' ,z, 0.2, 'na', 'na')
-            trace = px.scatter(x=x, y=y,color_continuous_scale=px.colors.sequential.Cividis_r)
-            trace_list.append(trace)
-        return trace_list
-
-    def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__,
-            sort_keys=True, indent=4)
     def add_feature(self,feature):
         if feature.type == 'CDS':
             self.orfs.append(feature)
@@ -78,41 +55,26 @@ class Locus:
             self.tRNAs.append(feature)
         if feature.type == 'repeat_region':
             self.repeat_regions.append(feature)
-    def getPhams(self):
-        pham_set = set()
-        for orf in self.orfs:
-            start, stop, strand = orf.location.start, orf.location.end, orf.location.strand
-            id = '|'.join([self.accessions, orf.id[0]]) #orf.id[0]
-            loc = np.where(pham_df.member == id)[0]
-            pham = pham_df.iloc[loc,0]
-            pham_set.add(pham.to_string(index=False))
-        self.phams = pham_set
-        return pham_set
-
     def load_orf_trace(self, pham_color_dict, pham_df, z=0, h=0.2):
-        self.firstorf = np.min([x.location.start for x in self.orfs])
-        self.lastorf = np.max([x.location.start for x in self.orfs])
-        fill='toself'
-        trace_list = []
+        list_of_starts = [x.location.start for x in self.orfs]
+        self.firstorf = np.min(list_of_starts)
+        self.lastorf = np.max(list_of_starts)
+        orf_trace_list = []
         for orf in self.orfs:
-            start, stop, strand = orf.location.start, orf.location.end, orf.location.strand
             id = '|'.join([self.accessions, orf.id[0]])
             loc = np.where(pham_df.member == id)[0]
             color = pham_color_dict[list(pham_df.iloc[loc,0])[0]]
-            linecolor = 'black'
-            opacity=1
-            # if orf.getProduct().lower() != 'hypothetical protein':
-            #     color = "gray"
-            #     opacity = 0.3
-            x, y = draw_shape(start, stop, strand, z, h, self.firstorf, self.lastorf)
-            trace = go.Scatter(x=x, y=y, marker=dict(size=1), opacity=opacity,fill=fill, fillcolor=color, line_color=linecolor, text='{}|{}'.format(orf.id[0], orf.getProduct()),hoverinfo='text' )
-            trace_list.append(trace)
-        return trace_list
+            self.color = color
+            x, y = draw_shape(orf.location.start, orf.location.end, orf.location.strand, z, h, self.firstorf, self.lastorf)
+            trace = go.Scatter(x=x, y=y, name = self.color, marker=dict(size=1), line=dict(width=1), opacity=1,fill='toself', fillcolor=color, line_color='gray', text='{}|{}'.format(orf.id[0], orf.getProduct()),hoverinfo='text' )
+            orf_trace_list.append(trace)
+        return orf_trace_list
     def load_trna_trace(self,z=0,h=0.2):
-        self.firstorf = np.min([x.location.start for x in self.orfs])
-        self.lastorf = np.max([x.location.start for x in self.orfs])
         trace_list = []
         if len(self.tRNAs) > 0:
+            list_of_starts = [x.location.start for x in self.orfs]
+            self.firstorf = np.min(list_of_starts)
+            self.lastorf = np.max(list_of_starts)
             for trna in self.tRNAs:
                 if trna.location is None:
                     continue
@@ -124,10 +86,11 @@ class Locus:
                 trace_list.append(trace)
         return trace_list
     def load_repeat_trace(self,z=0,h=0.2):
-        self.firstorf = np.min([x.location.start for x in self.orfs])
-        self.lastorf = np.max([x.location.start for x in self.orfs])
         trace_list = []
         if len(self.repeat_regions) > 0:
+            list_of_starts = [x.location.start for x in self.orfs]
+            self.firstorf = np.min(list_of_starts)
+            self.lastorf = np.max(list_of_starts)
             for rp in self.repeat_regions:
                 start, stop, strand = rp.location.start, rp.location.end, rp.location.strand
                 linecolor = 'pink'
@@ -136,9 +99,25 @@ class Locus:
                 trace = go.Scatter(x=x, y=y, marker=dict(size=1), opacity=opacity, fill='toself', fillcolor='pink', line_color='pink', text='{}|{}'.format(''.join(rp.rpt_family), self.annotations['organism']),hoverinfo='text')
                 trace_list.append(trace)
         return trace_list
-
     def load_syn_trace(self, blast_di, order, phages, current_h=0):
         shade_trace_list, boundary_left_list, boundary_right_list = [], [], []
+        # for i, phage_order in enumerate(order):
+        #     print(phage_order)
+        #     accession_a, order_a = phage_order
+        #     try:
+        #         neighbor_phage = order[i+1]
+        #     except:
+        #         continue
+        #     accession_b, order_b = neighbor_phage
+        #     if '{}_vs_{}.out'.format(accession_a, accession_b) in blast_di:
+        #         matches = blast_di['{}_vs_{}.out'.format(accession_a, accession_b)]
+        #     else:
+        #         matches = blast_di['{}_vs_{}.out'.format(accession_b, accession_a)]
+        #     if len(matches) > 0:
+        #         for match in matches.itertuples():
+        #             target_h = [x[1] for x in order if x[0] in match.subject][0]
+        #             source_h = [x[1] for x in order if x[0] in match.query][0]
+        #             print([target_h, source_h])
         for comparison, matches in blast_di.items():
             if len(matches) > 0 and self.accessions in comparison:
                 for match in matches.itertuples():
@@ -159,16 +138,9 @@ class Locus:
                     if percent_id > 90:
                         shade = 'green'
                     end = len(self.fna)
-
                     x=(source_start, target_start, target_end, source_end, source_start)
                     y=(source_h, target_h, target_h, source_h, source_h)
-
-                    shade_trace = go.Scatter(x=x,y=y,marker=dict(size=1),fill='toself',fillcolor=shade,line_color=shade,opacity=.1,text='{}%'.format(percent_id),hoverinfo='text')
-                    shade_trace_list.append(shade_trace)
-
-                    x=(source_start, target_start, target_end, source_end, source_start)
-                    y=(source_h, target_h, target_h, source_h, source_h)
-                    shade_trace = go.Scatter(x=x,y=y,marker=dict(size=1),fill='toself',fillcolor=shade,line_color=shade,opacity=.1,text='{}%'.format(percent_id),hoverinfo='text')
+                    shade_trace = go.Scatter(x=x,y=y,marker=dict(size=1),fill='toself',fillcolor=shade,line_color=shade,opacity=.2,text='{}%'.format(percent_id),hoverinfo='text')
                     shade_trace_list.append(shade_trace)
         return shade_trace_list#, boundary_left_list, boundary_right_list
 
@@ -217,16 +189,6 @@ class Orf(object):
         return protein
     def getProduct(self):
         return self.qualifiers.get('product', ['unknown'])[0]
-    def getPham(self, pham_df):
-        phams = set(pham_df.representative)
-        rgb_values = ['rgb{}'.format(tuple(np.random.choice(range(256), size=3))) for i in range(len(phams))]
-        pham_color_dict = dict(zip(phams,rgb_values))
-        id = '|'.join([self.accessions,self.orf.id[0]])
-        loc = np.where(pham_df.member == id)[0]
-        color = pham_color_dict[list(pham_df.iloc[loc,0])[0]]
-    def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__,
-            sort_keys=True, indent=4)
     def encode(self):
         return self.__dict__
 
@@ -247,7 +209,7 @@ def cluster(phages, working_path):
                 os.path.join(working_path, 'cluster_out', 'DB')]
     subprocess.run(createdb, shell=False)
     cluster = ['{}/mmseqs'.format(binb),
-               'cluster',
+               'linclust',
                '-v',
                '0',
                os.path.join(working_path, 'cluster_out', 'DB'),
@@ -257,6 +219,8 @@ def cluster(phages, working_path):
     #mmseqs createtsv DB DB DB_clu DB_clu.tsv
     createtsv = ['{}/mmseqs'.format(binb),
                  'createtsv',
+                 '-v',
+                 '0',
                  os.path.join(working_path,'cluster_out', 'DB'),
                  os.path.join(working_path,'cluster_out', 'DB'),
                  os.path.join(working_path,'cluster_out', 'DB_clu'),
@@ -277,7 +241,6 @@ def blastn(phages, working_path):
             handle.write('\n')
         handle.close()
     with open(os.path.join(working_path, 'commands.txt'), 'r') as f:
-        print(f)
         subprocess.run(['/usr/local/bin/parallel'], stdin=f, check=True)
     results_di = {}
     for blast_out in glob.glob(os.path.join(working_path, "blast_out", '*.out')):
@@ -303,12 +266,13 @@ def load_phages(phage_list):
 
 def draw_shape(start,stop,strand, z, h, firstorf, lastorf):
     start, stop = int(start), int(stop)
+    z += 0.1
     if strand == 1:
         x = (start, start+50, start, stop-50, stop, stop-50, start)
         y = (z, z+h/2, z+h, z+h, z+h/2, z, z)
     elif strand == -1:
         x = (start+50, start, start+50, stop, stop-50, stop, start+50)
-        y = (z, z-h/2, z-h, z-h, z-h/2, z, z)
+        y = (z, z+h/2, z+h, z+h, z+h/2, z, z)
     else:
         z = z + 0.5 #offset height
         x = start
@@ -342,20 +306,18 @@ def graphing(pham_df, phages, blast_di, order):
     #sorted_phages = sorted(phages, key=lambda x: x.annotations['organism'])
     order = [phages[x] for x in order]
     order_reduced = list(zip([x.accessions for x in order], range(len(order))))
-    fig = go.Figure(layout={'width':1200,'height':1200})
+    fig = go.FigureWidget()
     for z, phage in enumerate(order):
-        fig.add_trace(go.Scatter(x=(0,len(phage.fna)),y=(z,z), mode='lines', line=dict(color='black', width=4, dash='dash')))
+        fig.add_trace(go.Scatter(x=(0,len(phage.fna)),y=(z,z), mode='lines', line=dict(color='gray', width=1,)))
         shade = phage.load_syn_trace(blast_di, order_reduced, phages, z)
         [fig.add_trace(x) for x in shade]
     for z, phage in enumerate(order):
-        #print(phage.load_gc_trace(2, 50))
         try:
             [fig.add_trace(x) for x in phage.load_repeat_trace(z, 0.2)]
         except ValueError:
             pass
         if len(phage.orfs) > 0:
             [fig.add_trace(x) for x in phage.load_orf_trace(pham_color_dict, pham_df, z, 0.2)]
-            #[fig.add_trace(x) for x in phage.load_gc_trace(z,50)]
         if len(phage.tRNAs) > 0:
             [fig.add_trace(x) for x in phage.load_trna_trace(z, 0.2)]
 
@@ -385,7 +347,10 @@ def graphing(pham_df, phages, blast_di, order):
     fig.update_layout(
             height=(len(order)*50)+200,
             )
-    fig.update_xaxes(range=[0, 8000])
+    #fig.update_xaxes(range=[0, 8000])
+    scatter = fig.data[0]
+    print(scatter)
+    scatter.on_click(update_point)
     return fig
 
 def defaultFig():
@@ -437,10 +402,18 @@ def layout():
                 type="dot",
                 children=dcc.Graph(id='phamlite',figure = defaultFig())
                 ),
-            ])
+            ]),
+        html.H1(id='test')
         ],className='mt-4')])
     return layout
 
+def update_point(trace, points, selector):
+    c = list(scatter.marker.color)
+    print(c)
+    for i in points.point_inds:
+        c[i] = 'black'
+        with f.batch_update():
+            scatter.marker.color = c
 
 #if __name__ == '__main__':
 app.layout = layout()
@@ -490,13 +463,33 @@ def load_dropdown(list_of_contents, list_of_names, list_of_dates):
               [Input('dropdown', 'value'),
                Input('hidden_pham_df','data'),
                Input('hidden_phages','data'),
-               Input('hidden_blast_di','data')])
-def update_output(selected_order, pham_df, phages, blast_di):
+               Input('hidden_blast_di','data'),
+               Input('phamlite', 'clickData')])
+def update_output(selected_order, pham_df, phages, blast_di, clickData):
+    trigger = dash.callback_context.triggered[0]['prop_id']
+    print(trigger)
+    if trigger == '.':
+        raise dash.exceptions.PreventUpdate
     pham_df = pd.read_json(pham_df)
     phages = jsonpickle.decode(phages)
-    print(phages)
     blast_di = jsonpickle_pd.decode(blast_di)
     fig = graphing(pham_df, phages, blast_di, selected_order)
+    if trigger == 'phamlite.clickData':
+        print(clickData)
+        #fig.update_traces(fillcolor="black", selector=dict(text='YP_009619858.1|hypothetical protein'))
     return fig
+    #return [fig, jsonpickle.encode(fig)]
+
+# @app.callback(
+#     Output('test', 'children'),
+#    [Input('hidden_fig', 'data'),
+#     Input('phamlite', 'clickData')])
+# def display_click_data(fig, clickData):
+#     if clickData:
+#         fig = jsonpickle.decode(fig)
+#         print(type(fig))
+#         fig.update_traces(fillcolor="black")
+#     #fig.update_traces(maker=dict(color="black"))
+#         return fig
 
 app.run_server(host="0.0.0.0", port="8050", debug=True)
