@@ -28,6 +28,8 @@ import json
 import numpy as np
 from colour import Color
 import plotly.express as px
+from itertools import islice
+from Bio.SeqUtils import GC
 
 #external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__) #external_stylesheets=external_stylesheets)
@@ -125,6 +127,20 @@ class Locus:
                     shade_trace = go.Scatter(x=x,y=y,marker=dict(size=1),fill='toself',fillcolor=shade,line_color=shade,opacity=.2,text='{}%'.format(percent_id),hoverinfo='text')
                     shade_trace_list.append(shade_trace)
         return shade_trace_list#, boundary_left_list, boundary_right_list
+    def draw_gc_content(self, z, w):
+        gc_content = list()
+        for win in window(self.fna, w):
+            gc_content.append(GC(win))
+        self.gc_content = gc_content
+        x = list(range(0, len(self.gc_content)))
+        y = self.gc_content
+        max_ = max(self.gc_content)
+        min_ = min(self.gc_content)
+        norm_y = [((xi-min_)/(max_-min_))+z for xi in y]
+        df = pd.DataFrame(dict(x = x, y = norm_y))
+        trace = go.Scatter(x=x, y=norm_y, line=dict(width=1,color='gray'))
+        print(trace)
+        return trace
 
 class TRNA(object):
     def __init__(self, feature):
@@ -191,7 +207,7 @@ def cluster(phages, working_path):
                 os.path.join(working_path, 'cluster_out', 'DB')]
     subprocess.run(createdb, shell=False)
     cluster = ['{}/mmseqs'.format(binb),
-               'cluster',
+               'linclust',
                '-v',
                '0',
                os.path.join(working_path, 'cluster_out', 'DB'),
@@ -301,6 +317,8 @@ def graphing(phamcolor_dict, phages, blast_di, order):
             [fig.add_trace(x) for x in phage.load_orf_trace(phamcolor_dict, z, 0.2)]
         if len(phage.tRNAs) > 0:
             [fig.add_trace(x) for x in phage.load_trna_trace(z, 0.2)]
+        fig.add_trace(phage.draw_gc_content(z, 500))
+
 
     fig.update_layout(
         yaxis = dict(
@@ -385,7 +403,17 @@ def layout():
         ],className='mt-4')])
     return layout
 
-#if __name__ == '__main__':
+def window(seq, n):
+    "Returns a sliding window (of width n) over data from the iterable"
+    "   s -> (s0,s1,...s[n-1]), (s1,s2,...,sn), ...                   "
+    it = iter(seq)
+    result = tuple(islice(it, n))
+    if len(result) == n:
+        yield result
+    for elem in it:
+        result = result[1:] + (elem,)
+        yield result
+
 app.layout = layout()
 
 @app.callback([Output('dropdown','options'),
@@ -414,7 +442,6 @@ def load_dropdown(list_of_contents, list_of_names, list_of_dates):
                     handle.write(file_content.decode("utf-8"))
             except ValueError:
                 continue
-
         phage_list = glob.glob(os.path.join(f, '*.gb'))
         phages = load_phages(phage_list)
         blast_di = blastn(phages, f)
@@ -455,18 +482,5 @@ def update_output(selected_order, phamcolor_dict, phages, blast_di, clickData):
         fig.update_traces(opacity=0.2)
         fig.update_traces(opacity=1, selector=dict(name=clicked_trace_fillcolor))
     return fig
-    #return [fig, jsonpickle.encode(fig)]
-
-# @app.callback(
-#     Output('test', 'children'),
-#    [Input('hidden_fig', 'data'),
-#     Input('phamlite', 'clickData')])
-# def display_click_data(fig, clickData):
-#     if clickData:
-#         fig = jsonpickle.decode(fig)
-#         print(type(fig))
-#         fig.update_traces(fillcolor="black")
-#     #fig.update_traces(maker=dict(color="black"))
-#         return fig
 
 app.run_server(host="0.0.0.0", port="8050", debug=True)
