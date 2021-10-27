@@ -134,13 +134,15 @@ class Locus:
         self.gc_content = gc_content
         x = list(range(0, len(self.gc_content)))
         y = self.gc_content
-        max_ = max(self.gc_content)
-        min_ = min(self.gc_content)
-        norm_y = [((xi-min_)/(max_-min_))+z for xi in y]
+        self.gc_max = max(self.gc_content)
+        self.gc_min = min(self.gc_content)
+        norm_y = [((xi-self.gc_min)/(self.gc_max-self.gc_min)) for xi in y]
+        mean = np.mean(norm_y)
+        norm_y = [((xi-self.gc_min)/(self.gc_max-self.gc_min))-mean+z for xi in y]
         df = pd.DataFrame(dict(x = x, y = norm_y))
         trace = go.Scatter(x=x, y=norm_y, line=dict(width=1,color='gray'))
-        print(trace)
-        return trace
+        #mean = go.Scatter(x=[0, len(self.fna)], y=[np.mean(norm_y),np.mean(norm_y)], line=dict(width=1,color='black'))
+        return [trace]
 
 class TRNA(object):
     def __init__(self, feature):
@@ -317,7 +319,7 @@ def graphing(phamcolor_dict, phages, blast_di, order):
             [fig.add_trace(x) for x in phage.load_orf_trace(phamcolor_dict, z, 0.2)]
         if len(phage.tRNAs) > 0:
             [fig.add_trace(x) for x in phage.load_trna_trace(z, 0.2)]
-        fig.add_trace(phage.draw_gc_content(z, 500))
+        [fig.add_trace(x) for x in phage.draw_gc_content(z, 500)]
 
 
     fig.update_layout(
