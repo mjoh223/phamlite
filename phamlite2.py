@@ -45,7 +45,6 @@ class Locus:
         self.annotations = ann
         self.fna = str(fna)
         self.filename = filename
-        self.phams = []
         self.gc_skew = []
         self.accessions = self.annotations['accessions'][0]
     def add_feature(self,feature):
@@ -55,18 +54,18 @@ class Locus:
             self.tRNAs.append(feature)
         if feature.type == 'repeat_region':
             self.repeat_regions.append(feature)
-    def load_orf_trace(self, pham_color_dict, pham_df, z=0, h=0.2):
+    def load_orf_trace(self, pham_color_dict, z=0, h=0.2):
         list_of_starts = [x.location.start for x in self.orfs]
         self.firstorf = np.min(list_of_starts)
         self.lastorf = np.max(list_of_starts)
         orf_trace_list = []
+        #print(self.phamdf)
         for orf in self.orfs:
             id = '|'.join([self.accessions, orf.id[0]])
-            loc = np.where(pham_df.member == id)[0]
-            color = pham_color_dict[list(pham_df.iloc[loc,0])[0]]
-            self.color = color
+            orf.pham = self.phamdf[id]
+            self.color = pham_color_dict[orf.pham]
             x, y = draw_shape(orf.location.start, orf.location.end, orf.location.strand, z, h, self.firstorf, self.lastorf)
-            trace = go.Scatter(x=x, y=y, name = self.color, marker=dict(size=1), line=dict(width=1), opacity=1,fill='toself', fillcolor=color, line_color='gray', text='{}|{}'.format(orf.id[0], orf.getProduct()),hoverinfo='text' )
+            trace = go.Scatter(x=x, y=y, name = self.color, marker=dict(size=1), line=dict(width=1), opacity=1,fill='toself', fillcolor=self.color, line_color='gray', text='{}|{}'.format(orf.id[0], orf.getProduct()),hoverinfo='text' )
             orf_trace_list.append(trace)
         return orf_trace_list
     def load_trna_trace(self,z=0,h=0.2):
@@ -101,23 +100,6 @@ class Locus:
         return trace_list
     def load_syn_trace(self, blast_di, order, phages, current_h=0):
         shade_trace_list, boundary_left_list, boundary_right_list = [], [], []
-        # for i, phage_order in enumerate(order):
-        #     print(phage_order)
-        #     accession_a, order_a = phage_order
-        #     try:
-        #         neighbor_phage = order[i+1]
-        #     except:
-        #         continue
-        #     accession_b, order_b = neighbor_phage
-        #     if '{}_vs_{}.out'.format(accession_a, accession_b) in blast_di:
-        #         matches = blast_di['{}_vs_{}.out'.format(accession_a, accession_b)]
-        #     else:
-        #         matches = blast_di['{}_vs_{}.out'.format(accession_b, accession_a)]
-        #     if len(matches) > 0:
-        #         for match in matches.itertuples():
-        #             target_h = [x[1] for x in order if x[0] in match.subject][0]
-        #             source_h = [x[1] for x in order if x[0] in match.query][0]
-        #             print([target_h, source_h])
         for comparison, matches in blast_di.items():
             if len(matches) > 0 and self.accessions in comparison:
                 for match in matches.itertuples():
@@ -209,7 +191,7 @@ def cluster(phages, working_path):
                 os.path.join(working_path, 'cluster_out', 'DB')]
     subprocess.run(createdb, shell=False)
     cluster = ['{}/mmseqs'.format(binb),
-               'linclust',
+               'cluster',
                '-v',
                '0',
                os.path.join(working_path, 'cluster_out', 'DB'),
@@ -299,14 +281,13 @@ def draw_repeat(start,stop,strand,z,h,firstorf,lastorf):
         y=(z,z-h,z-h,z,z)
     return x,y
 
-def graphing(pham_df, phages, blast_di, order):
-    phams = set(pham_df.representative)
-    rgb_values = ['rgb{}'.format(tuple(np.random.choice(range(256), size=3))) for i in range(len(phams))]
-    pham_color_dict = dict(zip(phams,rgb_values))
+def graphing(phamcolor_dict, phages, blast_di, order):
+    labels = [ {'label':x.annotations['organism'], 'value':i} for i, x in enumerate(phages) ]
     #sorted_phages = sorted(phages, key=lambda x: x.annotations['organism'])
     order = [phages[x] for x in order]
     order_reduced = list(zip([x.accessions for x in order], range(len(order))))
-    fig = go.FigureWidget()
+    fig = go.Figure()
+    fig.update_layout(hovermode="closest")
     for z, phage in enumerate(order):
         fig.add_trace(go.Scatter(x=(0,len(phage.fna)),y=(z,z), mode='lines', line=dict(color='gray', width=1,)))
         shade = phage.load_syn_trace(blast_di, order_reduced, phages, z)
@@ -317,7 +298,7 @@ def graphing(pham_df, phages, blast_di, order):
         except ValueError:
             pass
         if len(phage.orfs) > 0:
-            [fig.add_trace(x) for x in phage.load_orf_trace(pham_color_dict, pham_df, z, 0.2)]
+            [fig.add_trace(x) for x in phage.load_orf_trace(phamcolor_dict, z, 0.2)]
         if len(phage.tRNAs) > 0:
             [fig.add_trace(x) for x in phage.load_trna_trace(z, 0.2)]
 
@@ -348,9 +329,6 @@ def graphing(pham_df, phages, blast_di, order):
             height=(len(order)*50)+200,
             )
     #fig.update_xaxes(range=[0, 8000])
-    scatter = fig.data[0]
-    print(scatter)
-    scatter.on_click(update_point)
     return fig
 
 def defaultFig():
@@ -389,7 +367,7 @@ def layout():
             # Allow multiple files to be uploaded
             multiple=True
                 ),
-             dcc.Store(id='hidden_pham_df'),
+             dcc.Store(id='hidden_phamcolor_dict'),
              dcc.Store(id='hidden_phages'),
              dcc.Store(id='hidden_blast_di'),
              dcc.Loading(
@@ -407,20 +385,12 @@ def layout():
         ],className='mt-4')])
     return layout
 
-def update_point(trace, points, selector):
-    c = list(scatter.marker.color)
-    print(c)
-    for i in points.point_inds:
-        c[i] = 'black'
-        with f.batch_update():
-            scatter.marker.color = c
-
 #if __name__ == '__main__':
 app.layout = layout()
 
 @app.callback([Output('dropdown','options'),
            Output('dropdown','value'),
-           Output('hidden_pham_df','data'),
+           Output('hidden_phamcolor_dict','data'),
            Output('hidden_phages','data'),
            Output('hidden_blast_di','data')],
           [Input('upload-data','contents')],
@@ -449,34 +419,41 @@ def load_dropdown(list_of_contents, list_of_names, list_of_dates):
         phages = load_phages(phage_list)
         blast_di = blastn(phages, f)
         pham_df = cluster(phages, f)
-
         labels = [ {'label':x.annotations['organism'], 'value':i} for i, x in enumerate(phages) ]
-        pham_df = pham_df.to_json()
+        pham_df = dict(zip(pham_df['member'], pham_df['representative']))
+        print(pham_df)
+        for phage in phages:
+            phage.phamdf = pham_df
+        phams = set(pham_df.values())
+        rgb_values = ['rgb{}'.format(tuple(np.random.choice(range(256), size=3))) for i in range(len(phams))]
+        pham_color_dict = dict(zip(phams,rgb_values))
+        pham_color_dict = jsonpickle.encode(pham_color_dict)
         phages = jsonpickle.encode(phages)
         blast_di = jsonpickle_pd.encode(blast_di)
-        return labels, list(range(len(labels))), pham_df, phages, blast_di
+        return labels, list(range(len(labels))), pham_color_dict, phages, blast_di
     else:
         print('empty', flush=True)
         raise dash.exceptions.PreventUpdate
 
 @app.callback(Output('phamlite', 'figure'),
               [Input('dropdown', 'value'),
-               Input('hidden_pham_df','data'),
+               Input('hidden_phamcolor_dict','data'),
                Input('hidden_phages','data'),
                Input('hidden_blast_di','data'),
                Input('phamlite', 'clickData')])
-def update_output(selected_order, pham_df, phages, blast_di, clickData):
+def update_output(selected_order, phamcolor_dict, phages, blast_di, clickData):
     trigger = dash.callback_context.triggered[0]['prop_id']
-    print(trigger)
     if trigger == '.':
         raise dash.exceptions.PreventUpdate
-    pham_df = pd.read_json(pham_df)
+    phamcolor_dict = jsonpickle.decode(phamcolor_dict)
     phages = jsonpickle.decode(phages)
     blast_di = jsonpickle_pd.decode(blast_di)
-    fig = graphing(pham_df, phages, blast_di, selected_order)
+    fig = graphing(phamcolor_dict, phages, blast_di, selected_order)
     if trigger == 'phamlite.clickData':
-        print(clickData)
-        #fig.update_traces(fillcolor="black", selector=dict(text='YP_009619858.1|hypothetical protein'))
+        cuverNumber = clickData['points'][0]['curveNumber']
+        clicked_trace_fillcolor = fig['data'][cuverNumber]['fillcolor']
+        fig.update_traces(opacity=0.2)
+        fig.update_traces(opacity=1, selector=dict(name=clicked_trace_fillcolor))
     return fig
     #return [fig, jsonpickle.encode(fig)]
 
