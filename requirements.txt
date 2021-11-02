@@ -2,7 +2,6 @@ dash
 dash_bootstrap_components
 pandas
 Biopython
-itertools
 glob
 shutil
 jsonpickle
