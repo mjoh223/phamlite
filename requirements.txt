@@ -6,6 +6,5 @@ pandas
 Biopython
 numpy
 colour
-json
 csv
 
