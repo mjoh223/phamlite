@@ -209,13 +209,28 @@ def cluster(phages, working_path):
                 os.path.join(working_path, 'cluster_out', 'DB')]
     subprocess.run(createdb, shell=False)
     cluster = ['{}/mmseqs'.format(binb),
-               'linclust',
+               'cluster',
                '-v',
                '0',
                os.path.join(working_path, 'cluster_out', 'DB'),
                os.path.join(working_path, 'cluster_out', 'DB_clu'),
                os.path.join(working_path, 'tmp')]
     subprocess.run(cluster, shell=False)
+    align = ['{}/mmseqs'.format(binb),
+               'align',
+               os.path.join(working_path, 'cluster_out', 'DB'),
+               os.path.join(working_path, 'cluster_out', 'DB'),
+               os.path.join(working_path, 'cluster_out', 'DB_clu'),
+               os.path.join(working_path, 'cluster_out', 'aln'),
+               '-a',]
+    subprocess.run(align, shell=False)
+    convertalis = ['{}/mmseqs'.format(binb),
+               'convertalis',
+               os.path.join(working_path, 'cluster_out', 'DB'),
+               os.path.join(working_path, 'cluster_out', 'DB'),
+               os.path.join(working_path, 'cluster_out', 'aln'),
+               os.path.join(working_path, 'cluster_out', 'aln.m8')]
+    subprocess.run(convertalis, shell=False)
     #mmseqs createtsv DB DB DB_clu DB_clu.tsv
     createtsv = ['{}/mmseqs'.format(binb),
                  'createtsv',
