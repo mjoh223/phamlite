@@ -6,5 +6,4 @@ pandas
 Biopython
 numpy
 colour
-csv
 
