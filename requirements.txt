@@ -1,7 +1,11 @@
 gunicorn
+jsonpickle
 dash
 dash_bootstrap_components
 pandas
 Biopython
 numpy
+colour
+json
+csv
 
