@@ -500,4 +500,4 @@ def update_output(selected_order, phamcolor_dict, phages, blast_di, clickData):
         fig.update_traces(opacity=1, selector=dict(name=clicked_trace_fillcolor))
     return fig
 
-app.run_server(host="0.0.0.0", port="8050", debug=True)
+app.run_server()
