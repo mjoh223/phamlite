@@ -199,7 +199,7 @@ def cluster(phages, working_path):
             f.write('\n>{}|{}\n'.format(phage.accessions, orf.id[0]))
             f.write(orf.getSeq()[0])
     f.close()
-    binb = '/usr/local/bin/'
+    binb = '/app/.apt/bin/'
     input_file = os.path.join(working_path, 'faa', 'orfs_pool.faa')
     createdb = ['{}/mmseqs'.format(binb),
                 'createdb',
@@ -445,9 +445,12 @@ def load_dropdown(list_of_contents, list_of_names, list_of_dates):
     def randomString(stringLength=8):
         letters = string.ascii_lowercase
         return ''.join(random.choice(letters) for i in range(stringLength))
-    storage_path = '/Users/matt/Desktop/phamlite_storage'
+    storage_path = '/app/phamlite_storage'
+    os.mkdir(storage_path)
     if list_of_contents is not None:
         f  =  os.path.join(storage_path, randomString(8))
+        print(glob.glob('/app/.apt/*'), flush=True)
+        print(glob.glob('/app/.apt/bin/*'), flush=True)
         print(f, flush=True)
         os.makedirs(f) #make working directory randomized string
         makedir(f) #make subdirectories in wd
