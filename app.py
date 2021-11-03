@@ -450,7 +450,10 @@ def load_dropdown(list_of_contents, list_of_names, list_of_dates):
     if list_of_contents is not None:
         f  =  os.path.join(storage_path, randomString(8))
         print(glob.glob('/app/.apt/*'), flush=True)
-        print(glob.glob('/app/.apt/lib/*'), flush=True)
+        print(glob.glob('/app/.apt/usr/*'), flush=True)
+        print(glob.glob('/app/.apt/var/*'), flush=True)
+        print(glob.glob('/app/.apt/etc/*'), flush=True)
+        print(glob.glob('/app/.apt/lib/systemd/*'), flush=True)
         print(f, flush=True)
         os.makedirs(f) #make working directory randomized string
         makedir(f) #make subdirectories in wd
