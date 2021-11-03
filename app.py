@@ -252,6 +252,7 @@ def blastn(phages, working_path):
             q_name, t_name = os.path.basename(query).replace('.fna',''), os.path.basename(target).replace('.fna','')
             out = '{}_vs_{}.out'.format(q_name,t_name)
             blastx_cline = NcbiblastnCommandline(query=query, subject=target, outfmt=7,out=os.path.join(working_path, 'blast_out', out))
+            print(blastx_cline)
             handle.write(str(blastx_cline))
             handle.write('\n')
         handle.close()
