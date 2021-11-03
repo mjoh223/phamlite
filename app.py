@@ -256,7 +256,7 @@ def blastn(phages, working_path):
             handle.write('\n')
         handle.close()
     with open(os.path.join(working_path, 'commands.txt'), 'r') as f:
-        subprocess.run(['/usr/local/bin/parallel'], stdin=f, check=True)
+        subprocess.run(['/app/.apt/etc/parallel'], stdin=f, check=True)
     results_di = {}
     for blast_out in glob.glob(os.path.join(working_path, "blast_out", '*.out')):
         results = pd.read_csv(blast_out, sep='\t',comment='#', names=['query', 'subject', 'identity', 'alignment' 'length', 'mismatches', 'gap_opens', 'q_start', 'q_end', 's_start', 's_end', 'evalue', 'bit_score'])
@@ -450,10 +450,7 @@ def load_dropdown(list_of_contents, list_of_names, list_of_dates):
     if list_of_contents is not None:
         f  =  os.path.join(storage_path, randomString(8))
         print(glob.glob('/app/.apt/*'), flush=True)
-        print(glob.glob('/app/.apt/usr/*'), flush=True)
-        print(glob.glob('/app/.apt/var/*'), flush=True)
-        print(glob.glob('/app/.apt/etc/*'), flush=True)
-        print(glob.glob('/app/.apt/lib/systemd/*'), flush=True)
+        print(glob.glob('/app/.apt/usr/bin/*'), flush=True)
         print(f, flush=True)
         os.makedirs(f) #make working directory randomized string
         makedir(f) #make subdirectories in wd
