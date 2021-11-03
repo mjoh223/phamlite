@@ -32,8 +32,8 @@ from itertools import islice
 from Bio.SeqUtils import GC
 
 #external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-phamlite2 = dash.Dash(__name__) #external_stylesheets=external_stylesheets)
-server = phamlite2.server
+app = dash.Dash(__name__) #external_stylesheets=external_stylesheets)
+server = app.server
 def makedir(f):
     directories = ['tmp','faa','fna','blast_out','cluster_data','cluster_out']
     for basename in directories:
@@ -431,7 +431,7 @@ def window(seq, n):
         result = result[1:] + (elem,)
         yield result
 
-phamlite2.layout = layout()
+app.layout = layout()
 
 @app.callback([Output('dropdown','options'),
            Output('dropdown','value'),

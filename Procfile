@@ -1,1 +1,1 @@
-web: gunicorn phamlite2:server
+web: gunicorn app:server
