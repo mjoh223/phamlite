@@ -199,7 +199,7 @@ def cluster(phages, working_path):
             f.write('\n>{}|{}\n'.format(phage.accessions, orf.id[0]))
             f.write(orf.getSeq()[0])
     f.close()
-    binb = '/app/.apt/bin/'
+    binb = '/app/.apt/usr/bin'
     input_file = os.path.join(working_path, 'faa', 'orfs_pool.faa')
     createdb = ['{}/mmseqs'.format(binb),
                 'createdb',
@@ -256,7 +256,7 @@ def blastn(phages, working_path):
             handle.write('\n')
         handle.close()
     with open(os.path.join(working_path, 'commands.txt'), 'r') as f:
-        subprocess.run(['/app/.apt/etc/parallel'], stdin=f, check=True)
+        subprocess.run(['/app/.apt/usr/bin/parallel'], stdin=f, check=True)
     results_di = {}
     for blast_out in glob.glob(os.path.join(working_path, "blast_out", '*.out')):
         results = pd.read_csv(blast_out, sep='\t',comment='#', names=['query', 'subject', 'identity', 'alignment' 'length', 'mismatches', 'gap_opens', 'q_start', 'q_end', 's_start', 's_end', 'evalue', 'bit_score'])
