@@ -431,7 +431,7 @@ def window(seq, n):
         result = result[1:] + (elem,)
         yield result
 
-app.layout = layout()
+phamlite2.layout = layout()
 
 @app.callback([Output('dropdown','options'),
            Output('dropdown','value'),
@@ -500,4 +500,4 @@ def update_output(selected_order, phamcolor_dict, phages, blast_di, clickData):
         fig.update_traces(opacity=1, selector=dict(name=clicked_trace_fillcolor))
     return fig
 
-app.run_server()
+#app.run_server()
