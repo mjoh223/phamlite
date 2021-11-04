@@ -450,9 +450,9 @@ def load_dropdown(list_of_contents, list_of_names, list_of_dates):
     os.makedirs(storage_path, exist_ok=True)
     if list_of_contents is not None:
         f  =  os.path.join(storage_path, randomString(8))
-        subprocess.run(['locate','libpcre.so'], shell=False)
-        print(glob.glob('/app/.apt/lib/systemd/system/*'), flush=True)
+        print(glob.glob('/app/.apt/*'), flush=True)
         print(glob.glob('/app/.apt/usr/bin/*'), flush=True)
+        subprocess.run('locate libpcre.so')
         print(f, flush=True)
 
         os.makedirs(f) #make working directory randomized string
