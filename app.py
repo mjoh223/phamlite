@@ -7,7 +7,7 @@ import pandas as pd
 from Bio import SeqIO, SeqUtils
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
-import os, sys, stat
+import os
 from itertools import combinations
 from Bio.Blast import NCBIXML
 import glob
@@ -32,7 +32,7 @@ from itertools import islice
 from Bio.SeqUtils import GC
 
 #install blast+
-os.chmod('/app/blast_installer.sh', stat.S_IXOTH)
+os.chmod('/app/blast_installer.sh', 0o777)
 print('installing blast')
 subprocess.call('/app/blast_installer.sh', shell=True)
 print('done')
