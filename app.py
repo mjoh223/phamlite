@@ -262,8 +262,8 @@ def blastn(phages, working_path):
             handle.write(str(blastx_cline))
             handle.write('\n')
         handle.close()
-    #with open(os.path.join(working_path, 'commands.txt'), 'r') as f:
-        #subprocess.run(['/app/.apt/usr/bin/parallel'], stdin=f, check=True)
+    with open(os.path.join(working_path, 'commands.txt'), 'r') as f:
+        subprocess.run(['/app/.apt/usr/bin/parallel'], stdin=f, check=True)
     results_di = {}
     for blast_out in glob.glob(os.path.join(working_path, "blast_out", '*.out')):
         results = pd.read_csv(blast_out, sep='\t',comment='#', names=['query', 'subject', 'identity', 'alignment' 'length', 'mismatches', 'gap_opens', 'q_start', 'q_end', 's_start', 's_end', 'evalue', 'bit_score'])
