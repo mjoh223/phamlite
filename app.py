@@ -214,8 +214,7 @@ def cluster(phages, working_path):
                 '0',
                 input_file,
                 os.path.join(working_path, 'cluster_out', 'DB'),
-                '--split-memory-limit',
-                '1G']
+                ]
     subprocess.run(createdb, shell=False)
     cluster = ['{}/mmseqs'.format(binb),
                'cluster',
@@ -224,8 +223,7 @@ def cluster(phages, working_path):
                os.path.join(working_path, 'cluster_out', 'DB'),
                os.path.join(working_path, 'cluster_out', 'DB_clu'),
                os.path.join(working_path, 'tmp'),
-               '--split-memory-limit',
-               '1G']
+               ]
     subprocess.run(cluster, shell=False)
     align = ['{}/mmseqs'.format(binb),
                'align',
@@ -234,8 +232,7 @@ def cluster(phages, working_path):
                os.path.join(working_path, 'cluster_out', 'DB_clu'),
                os.path.join(working_path, 'cluster_out', 'aln'),
                '-a',
-               '--split-memory-limit',
-               '1G']
+               ]
     subprocess.run(align, shell=False)
     convertalis = ['{}/mmseqs'.format(binb),
                'convertalis',
@@ -243,8 +240,7 @@ def cluster(phages, working_path):
                os.path.join(working_path, 'cluster_out', 'DB'),
                os.path.join(working_path, 'cluster_out', 'aln'),
                os.path.join(working_path, 'cluster_out', 'aln.m8'),
-               '--split-memory-limit',
-               '1G']
+               ]
     subprocess.run(convertalis, shell=False)
     #mmseqs createtsv DB DB DB_clu DB_clu.tsv
     createtsv = ['{}/mmseqs'.format(binb),
@@ -255,8 +251,7 @@ def cluster(phages, working_path):
                  os.path.join(working_path,'cluster_out', 'DB'),
                  os.path.join(working_path,'cluster_out', 'DB_clu'),
                  os.path.join(working_path,'cluster_data','DB_clu.tsv'),
-                 '--split-memory-limit',
-                 '1G']
+                 ]
     subprocess.run(createtsv, shell=False)
     return pd.read_csv(os.path.join(working_path, 'cluster_data/' 'DB_clu.tsv'), sep='\t',header=None, names=['representative','member'])
 
