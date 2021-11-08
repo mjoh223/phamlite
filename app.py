@@ -31,6 +31,11 @@ import plotly.express as px
 from itertools import islice
 from Bio.SeqUtils import GC
 
+#install blast+
+print('installing blast')
+subprocess.call('blast_installer.sh', shell=True)
+print('done')
+
 #external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__) #external_stylesheets=external_stylesheets)
 server = app.server
