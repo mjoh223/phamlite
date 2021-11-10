@@ -31,15 +31,8 @@ import plotly.express as px
 from itertools import islice
 from Bio.SeqUtils import GC
 
-#install blast+
-print('changing permissions')
-os.chmod('/app/blast_installer.sh', 0o777)
-print('installing blast')
-subprocess.call('/app/blast_installer.sh', shell=True)
-print('done')
-
 #external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-app = dash.Dash(__name__) #external_stylesheets=external_stylesheets)
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.LITERA]) #external_stylesheets=external_stylesheets)
 server = app.server
 def makedir(f):
     directories = ['tmp','faa','fna','blast_out','cluster_data','cluster_out']
@@ -517,4 +510,4 @@ def update_output(selected_order, phamcolor_dict, phages, blast_di, clickData):
         fig.update_traces(opacity=1, selector=dict(name=clicked_trace_fillcolor))
     return fig
 
-#app.run_server()
+app.run_server()
