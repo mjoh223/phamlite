@@ -199,7 +199,7 @@ def cluster(phages, working_path):
             f.write('\n>{}|{}\n'.format(phage.accessions, orf.id[0]))
             f.write(orf.getSeq()[0])
     f.close()
-    binb = '/app/.apt/usr/bin'
+    binb = '/usr/local/bin'
     input_file = os.path.join(working_path, 'faa', 'orfs_pool.faa')
     createdb = ['{}/mmseqs'.format(binb),
                 'createdb',
@@ -257,12 +257,12 @@ def blastn(phages, working_path):
             q_name, t_name = os.path.basename(query).replace('.fna',''), os.path.basename(target).replace('.fna','')
             out = '{}_vs_{}.out'.format(q_name,t_name)
             blastx_cline = NcbiblastnCommandline(query=query, subject=target, outfmt=7,out=os.path.join(working_path, 'blast_out', out))
-            blastx_cline()
+            #blastx_cline()
             handle.write(str(blastx_cline))
             handle.write('\n')
         handle.close()
     with open(os.path.join(working_path, 'commands.txt'), 'r') as f:
-        subprocess.run(['/app/.apt/usr/bin/parallel'], stdin=f, check=True)
+        subprocess.run(['/usr/local/bin/parallel'], stdin=f, check=True)
     results_di = {}
     for blast_out in glob.glob(os.path.join(working_path, "blast_out", '*.out')):
         results = pd.read_csv(blast_out, sep='\t',comment='#', names=['query', 'subject', 'identity', 'alignment' 'length', 'mismatches', 'gap_opens', 'q_start', 'q_end', 's_start', 's_end', 'evalue', 'bit_score'])
@@ -386,7 +386,7 @@ def defaultFig():
 
 def layout():
     layout = html.Div([
-    dbc.Row(dbc.Col(html.H1('phamlite'),width=4),justify="center"),
+    dbc.Row(html.H1('phamlite 2.0 beta'),justify="center"),
     dbc.Row([
         html.Div([
              dcc.Upload(
@@ -396,21 +396,30 @@ def layout():
                 html.A('select genbank files')
             ]),
             style={
-                'width': '100%',
+                'width': '80%',
                 'height': '60px',
                 'lineHeight': '60px',
-                'borderWidth': '1px',
+                'borderWidth': '2px',
+                'borderStyle': 'dashed',
+                'borderColor': 'black',
+                'borderRadius': '5px',
+                'textAlign': 'center',
+                'margin': '10px',
+                #'padding-left': '25%',
+                #'padding-right': '25%',
+            },
+            style_active={
+                'width': '80%',
+                'height': '60px',
+                'lineHeight': '60px',
+                'borderWidth': '2px',
                 'borderStyle': 'dashed',
                 'borderRadius': '5px',
                 'textAlign': 'center',
-                'margin': '10px'
+                'margin': '10px',
             },
-            # Allow multiple files to be uploaded
             multiple=True
                 ),
-             dcc.Store(id='hidden_phamcolor_dict'),
-             dcc.Store(id='hidden_phages'),
-             dcc.Store(id='hidden_blast_di'),
              dcc.Loading(
                 id="loading-1",
                 type="dot",
@@ -421,9 +430,12 @@ def layout():
                 type="dot",
                 children=dcc.Graph(id='phamlite',figure = defaultFig())
                 ),
-            ]),
-        html.H1(id='test')
-        ],className='mt-4')])
+            ],style={'width': '100%'}),
+            dcc.Store(id='hidden_phamcolor_dict'),
+            dcc.Store(id='hidden_phages'),
+            dcc.Store(id='hidden_blast_di'),
+        ]),
+        ])
     return layout
 
 def window(seq, n):
@@ -451,13 +463,10 @@ def load_dropdown(list_of_contents, list_of_names, list_of_dates):
     def randomString(stringLength=8):
         letters = string.ascii_lowercase
         return ''.join(random.choice(letters) for i in range(stringLength))
-    storage_path = '/app/phamlite_storage/'
+    storage_path = '/Users/Matt/Desktop/phamlite_storage/'
     os.makedirs(storage_path, exist_ok=True)
     if list_of_contents is not None:
         f  =  os.path.join(storage_path, randomString(8))
-        #print(glob.glob('/app/.apt/usr/lib/*'), flush=True)
-        #print(glob.glob('/app/.apt/usr/lib/ncbi-blast+/*'), flush=True)
-        #print(glob.glob('/app/.apt/usr/bin/*'), flush=True)
         print(f, flush=True)
         os.makedirs(f) #make working directory randomized string
         makedir(f) #make subdirectories in wd
@@ -510,4 +519,4 @@ def update_output(selected_order, phamcolor_dict, phages, blast_di, clickData):
         fig.update_traces(opacity=1, selector=dict(name=clicked_trace_fillcolor))
     return fig
 
-app.run_server()
+app.run_server(debug=True)
