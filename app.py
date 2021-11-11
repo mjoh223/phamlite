@@ -319,33 +319,34 @@ def draw_repeat(start,stop,strand,z,h,firstorf,lastorf):
         y=(z,z-h,z-h,z,z)
     return x,y
 
-def graphing(phamcolor_dict, phages, blast_di, order, trace_bool, repeat_bool, trna_bool, gc_bool):
+def graphing(phamcolor_dict, phages, blast_di, order, choice_dict):
     labels = [ {'label':x.annotations['organism'], 'value':i} for i, x in enumerate(phages) ]
     #sorted_phages = sorted(phages, key=lambda x: x.annotations['organism'])
     order = [phages[x] for x in order]
     order_reduced = list(zip([x.accessions for x in order], range(len(order))))
     fig = go.Figure()
     fig.update_layout(hovermode="closest")
-    if trace_bool:
+    if choice_dict['trace_bool'] is not True:
         for z, phage in enumerate(order):
             fig.add_trace(go.Scatter(x=(0,len(phage.fna)),y=(z,z), mode='lines', line=dict(color='gray', width=1,)))
             shade = phage.load_syn_trace(blast_di, order_reduced, phages, z)
             [fig.add_trace(x) for x in shade]
-    if repeat_bool is not True:
+    if choice_dict['repeat_bool'] is not True:
         for z, phage in enumerate(order):
             try:
                 [fig.add_trace(x) for x in phage.load_repeat_trace(z, 0.2)]
             except ValueError:
                 pass
     if len(phage.orfs) > 0:
-        [fig.add_trace(x) for x in phage.load_orf_trace(phamcolor_dict, z, 0.2)]
-    if tRNA_bool is not True:
+        for z, phage in enumerate(order):
+            [fig.add_trace(x) for x in phage.load_orf_trace(phamcolor_dict, z, 0.2)]
+    if choice_dict['trna_bool'] is not True:
         if len(phage.tRNAs) > 0:
-            [fig.add_trace(x) for x in phage.load_trna_trace(z, 0.2)]
-    if gc_bool is True:
-        [fig.add_trace(x) for x in phage.draw_gc_content(z, 500)]
-
-
+            for z, phage in enumerate(order):
+                [fig.add_trace(x) for x in phage.load_trna_trace(z, 0.2)]
+    if choice_dict['gc_bool'] is True:
+        for z, phage in enumerate(order):
+            [fig.add_trace(x) for x in phage.draw_gc_content(z, 500)]
     fig.update_layout(
         yaxis = dict(
             showgrid = False,
@@ -389,65 +390,70 @@ def defaultFig():
 
 def layout():
     layout = html.Div([
-    dbc.Row(html.H1('phamlite 2.0 beta'),justify="center"),
-    dbc.Row([
-        html.Div([
-             dcc.Upload(
-            id='upload-data',
-            children=html.Div([
-                'Drag and Drop or ',
-                html.A('select genbank files')
-            ]),
-            style={
-                'width': '80%',
-                'height': '60px',
-                'lineHeight': '60px',
-                'borderWidth': '2px',
-                'borderStyle': 'dashed',
-                'borderColor': 'black',
-                'borderRadius': '5px',
-                'textAlign': 'center',
-                'margin': '10px',
-                #'padding-left': '25%',
-                #'padding-right': '25%',
-            },
-            style_active={
-                'width': '80%',
-                'height': '60px',
-                'lineHeight': '60px',
-                'borderWidth': '2px',
-                'borderStyle': 'dashed',
-                'borderRadius': '5px',
-                'textAlign': 'center',
-                'margin': '10px',
-            },
-            multiple=True
-                ),
-             dcc.Loading(
-                id="loading-1",
-                type="dot",
-                children=dcc.Dropdown(id = 'dropdown',options = [{'label':'select genomes','value': 0}],multi=True)
-                ),
-            dbc.Checklist(
-                id="display_options",
-                options=[
-                    {"label": "hide synteny ribbons", "value": 0},
-                    {"label": "hide repeats", "value": 0},
-                    {"label": "hide tRNAs", "value": 0},
-                    {"label": "show GC% trace", "value": 0},
-                ],
-                value=[0,0,0,0]),
-             dcc.Loading(
-                id="loading-2",
-                type="dot",
-                children=dcc.Graph(id='phamlite',figure = defaultFig())
-                ),
-            ],style={'width': '100%'}),
-            dcc.Store(id='hidden_phamcolor_dict'),
-            dcc.Store(id='hidden_phages'),
-            dcc.Store(id='hidden_blast_di'),
-        ]),
-        ])
+        dbc.Row(html.H1('phamlite 2.0 beta'),justify="center"),
+        dbc.Row([
+                 dbc.Col([dcc.Upload(
+                            id='upload-data',
+                            children=html.Div([
+                                'Drag and Drop or ',
+                                html.A('select genbank files')
+                            ]),
+                            style={
+                                'width': '100%',
+                                'height': '60px',
+                                'lineHeight': '60px',
+                                'borderWidth': '2px',
+                                'borderStyle': 'dashed',
+                                'borderColor': 'black',
+                                'borderRadius': '5px',
+                                'textAlign': 'center',
+                                'margin': '10px',
+                                #'padding-left': '25%',
+                                #'padding-right': '25%',
+                            },
+                            style_active={
+                                'width': '100%',
+                                'height': '60px',
+                                'lineHeight': '60px',
+                                'borderWidth': '2px',
+                                'borderStyle': 'dashed',
+                                'borderRadius': '5px',
+                                'textAlign': 'center',
+                                'margin': '10px',
+                            },
+                            multiple=True)
+                    ]),
+                 dbc.Col([dbc.Checklist(
+                            id="display_options",
+                            options=[
+                                {"label": "hide synteny ribbons", "value": 'trace_bool'},
+                                {"label": "hide repeats", "value": 'repeat_bool'},
+                                {"label": "hide tRNAs", "value": 'trna_bool'},
+                                {"label": "show GC% trace", "value": 'gc_bool'}])
+                    ])
+                ]),
+        dbc.Row([
+                dbc.Col([dcc.Loading(
+                    id="loading-1",
+                    type="dot",
+                    children=dcc.Dropdown(id = 'dropdown',options = [{'label':'select genomes','value': 0}],multi=True)
+                    )
+                    ]),
+                ]),
+        dbc.Row([
+                dbc.Col([dcc.Loading(
+                    id="loading-2",
+                    type="dot",
+                    children=dcc.Graph(id='phamlite',figure = defaultFig())
+                    ),
+                    ]),
+                ]),
+        dbc.Row([
+                dcc.Store(id='hidden_phamcolor_dict'),
+                dcc.Store(id='hidden_phages'),
+                dcc.Store(id='hidden_blast_di'),
+                ]),
+            ])
     return layout
 
 def window(seq, n):
@@ -519,18 +525,20 @@ def load_dropdown(list_of_contents, list_of_names, list_of_dates):
                Input('display_options', 'value')])
 def update_output(selected_order, phamcolor_dict, phages, blast_di, clickData, display_options):
     trigger = dash.callback_context.triggered[0]['prop_id']
+    if trigger == '.':
+        raise dash.exceptions.PreventUpdate
     phamcolor_dict = jsonpickle.decode(phamcolor_dict)
     phages = jsonpickle.decode(phages)
     blast_di = jsonpickle_pd.decode(blast_di)
-    if trigger == '.':
-        raise dash.exceptions.PreventUpdate
     #if no parameters are pressed
     #if trigger not in ['trace_bool.value', 'repeat_bool.value', 'trna_bool.value', 'gc_bool.value']:
-    print(display_options, flush=True)
-    trace_bool, repeat_bool, trna_bool, gc_bool = display_options
-    fig = graphing(phamcolor_dict, phages, blast_di, selected_order, trace_bool, repeat_bool, trna_bool, gc_bool)
-    #if trigger in ['trace_bool.value', 'repeat_bool.value', 'trna_bool.value', 'gc_bool.value']:
-        #fig = graphing(phamcolor_dict, phages, blast_di, selected_order, trace_bool, repeat_bool, trna_bool, gc_bool)
+    choice_dict = {'trace_bool':False,'repeat_bool':False,'trna_bool':False,'gc_bool':False}
+    if display_options is None:
+        fig = graphing(phamcolor_dict, phages, blast_di, selected_order, choice_dict)
+    if display_options is not None:
+        for choice in display_options:
+            choice_dict[choice] = True
+        fig = graphing(phamcolor_dict, phages, blast_di, selected_order, choice_dict)
     if trigger == 'phamlite.clickData':
         cuverNumber = clickData['points'][0]['curveNumber']
         clicked_trace_fillcolor = fig['data'][cuverNumber]['fillcolor']
