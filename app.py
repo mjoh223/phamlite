@@ -61,7 +61,6 @@ class Locus:
         self.firstorf = np.min(list_of_starts)
         self.lastorf = np.max(list_of_starts)
         orf_trace_list = []
-        #print(self.phamdf)
         for orf in self.orfs:
             id = '|'.join([self.accessions, orf.id[0]])
             orf.pham = self.phamdf[id]
@@ -320,26 +319,30 @@ def draw_repeat(start,stop,strand,z,h,firstorf,lastorf):
         y=(z,z-h,z-h,z,z)
     return x,y
 
-def graphing(phamcolor_dict, phages, blast_di, order):
+def graphing(phamcolor_dict, phages, blast_di, order, trace_bool, repeat_bool, trna_bool, gc_bool):
     labels = [ {'label':x.annotations['organism'], 'value':i} for i, x in enumerate(phages) ]
     #sorted_phages = sorted(phages, key=lambda x: x.annotations['organism'])
     order = [phages[x] for x in order]
     order_reduced = list(zip([x.accessions for x in order], range(len(order))))
     fig = go.Figure()
     fig.update_layout(hovermode="closest")
-    for z, phage in enumerate(order):
-        fig.add_trace(go.Scatter(x=(0,len(phage.fna)),y=(z,z), mode='lines', line=dict(color='gray', width=1,)))
-        shade = phage.load_syn_trace(blast_di, order_reduced, phages, z)
-        [fig.add_trace(x) for x in shade]
-    for z, phage in enumerate(order):
-        try:
-            [fig.add_trace(x) for x in phage.load_repeat_trace(z, 0.2)]
-        except ValueError:
-            pass
-        if len(phage.orfs) > 0:
-            [fig.add_trace(x) for x in phage.load_orf_trace(phamcolor_dict, z, 0.2)]
+    if trace_bool:
+        for z, phage in enumerate(order):
+            fig.add_trace(go.Scatter(x=(0,len(phage.fna)),y=(z,z), mode='lines', line=dict(color='gray', width=1,)))
+            shade = phage.load_syn_trace(blast_di, order_reduced, phages, z)
+            [fig.add_trace(x) for x in shade]
+    if repeat_bool is not True:
+        for z, phage in enumerate(order):
+            try:
+                [fig.add_trace(x) for x in phage.load_repeat_trace(z, 0.2)]
+            except ValueError:
+                pass
+    if len(phage.orfs) > 0:
+        [fig.add_trace(x) for x in phage.load_orf_trace(phamcolor_dict, z, 0.2)]
+    if tRNA_bool is not True:
         if len(phage.tRNAs) > 0:
             [fig.add_trace(x) for x in phage.load_trna_trace(z, 0.2)]
+    if gc_bool is True:
         [fig.add_trace(x) for x in phage.draw_gc_content(z, 500)]
 
 
@@ -425,6 +428,15 @@ def layout():
                 type="dot",
                 children=dcc.Dropdown(id = 'dropdown',options = [{'label':'select genomes','value': 0}],multi=True)
                 ),
+            dbc.Checklist(
+                id="display_options",
+                options=[
+                    {"label": "hide synteny ribbons", "value": 0},
+                    {"label": "hide repeats", "value": 0},
+                    {"label": "hide tRNAs", "value": 0},
+                    {"label": "show GC% trace", "value": 0},
+                ],
+                value=[0,0,0,0]),
              dcc.Loading(
                 id="loading-2",
                 type="dot",
@@ -503,20 +515,28 @@ def load_dropdown(list_of_contents, list_of_names, list_of_dates):
                Input('hidden_phamcolor_dict','data'),
                Input('hidden_phages','data'),
                Input('hidden_blast_di','data'),
-               Input('phamlite', 'clickData')])
-def update_output(selected_order, phamcolor_dict, phages, blast_di, clickData):
+               Input('phamlite', 'clickData'),
+               Input('display_options', 'value')])
+def update_output(selected_order, phamcolor_dict, phages, blast_di, clickData, display_options):
     trigger = dash.callback_context.triggered[0]['prop_id']
-    if trigger == '.':
-        raise dash.exceptions.PreventUpdate
     phamcolor_dict = jsonpickle.decode(phamcolor_dict)
     phages = jsonpickle.decode(phages)
     blast_di = jsonpickle_pd.decode(blast_di)
-    fig = graphing(phamcolor_dict, phages, blast_di, selected_order)
+    if trigger == '.':
+        raise dash.exceptions.PreventUpdate
+    #if no parameters are pressed
+    #if trigger not in ['trace_bool.value', 'repeat_bool.value', 'trna_bool.value', 'gc_bool.value']:
+    print(display_options, flush=True)
+    trace_bool, repeat_bool, trna_bool, gc_bool = display_options
+    fig = graphing(phamcolor_dict, phages, blast_di, selected_order, trace_bool, repeat_bool, trna_bool, gc_bool)
+    #if trigger in ['trace_bool.value', 'repeat_bool.value', 'trna_bool.value', 'gc_bool.value']:
+        #fig = graphing(phamcolor_dict, phages, blast_di, selected_order, trace_bool, repeat_bool, trna_bool, gc_bool)
     if trigger == 'phamlite.clickData':
         cuverNumber = clickData['points'][0]['curveNumber']
         clicked_trace_fillcolor = fig['data'][cuverNumber]['fillcolor']
         fig.update_traces(opacity=0.2)
         fig.update_traces(opacity=1, selector=dict(name=clicked_trace_fillcolor))
+
     return fig
 
 app.run_server(debug=True)
