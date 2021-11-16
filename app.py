@@ -176,7 +176,7 @@ class Orf(object):
         self.type = feature.type
         self.location = feature.location
         self.qualifiers = feature.qualifiers
-        self.alignment = None
+        self.alignment = list()
         try:
             self.id = self.qualifiers['protein_id']
         except:
@@ -253,8 +253,7 @@ def cluster(phages, working_path):
             for orf in phage.orfs:
                 orf_id = '{}|{}'.format(phage.accessions, orf.id[0])
                 if orf_id == row[1]:
-                    print('hi')
-                    orf.alignment = row
+                    orf.alignment.append(row.tolist()) #jsonpickling only works when you convert np Series to list
     return pd.read_csv(os.path.join(working_path, 'cluster_data/' 'DB_clu.tsv'), sep='\t',header=None, names=['representative','member'])
 
 def blastn(phages, working_path):
@@ -511,7 +510,6 @@ def load_dropdown(list_of_contents, list_of_names, list_of_dates):
         phages = load_phages(phage_list)
         blast_di = blastn(phages, f)
         pham_df = cluster(phages, f)
-        print(phages)
         labels = [ {'label':x.annotations['organism'], 'value':i} for i, x in enumerate(phages) ]
         pham_df = dict(zip(pham_df['member'], pham_df['representative']))
         for phage in phages:
@@ -521,6 +519,7 @@ def load_dropdown(list_of_contents, list_of_names, list_of_dates):
         pham_color_dict = dict(zip(phams,rgb_values))
         pham_color_dict = jsonpickle.encode(pham_color_dict)
         phages = jsonpickle.encode(phages)
+        print(phages)
         blast_di = jsonpickle_pd.encode(blast_di)
         return labels, list(range(len(labels))), pham_color_dict, phages, blast_di
     else:
@@ -539,11 +538,8 @@ def update_output(selected_order, phamcolor_dict, phages, blast_di, clickData, d
     if trigger == '.':
         raise dash.exceptions.PreventUpdate
     phamcolor_dict = jsonpickle.decode(phamcolor_dict)
-    print(phages)
     phages = jsonpickle.decode(phages)
     blast_di = jsonpickle_pd.decode(blast_di)
-    #if no parameters are pressed
-    #if trigger not in ['trace_bool.value', 'repeat_bool.value', 'trna_bool.value', 'gc_bool.value']:
     choice_dict = {'trace_bool':False,'repeat_bool':False,'trna_bool':False,'gc_bool':False}
     if display_options is None:
         fig = graphing(phamcolor_dict, phages, blast_di, selected_order, choice_dict)
@@ -553,6 +549,7 @@ def update_output(selected_order, phamcolor_dict, phages, blast_di, clickData, d
         fig = graphing(phamcolor_dict, phages, blast_di, selected_order, choice_dict)
     if trigger == 'phamlite.clickData':
         cuverNumber = clickData['points'][0]['curveNumber']
+        print(fig['data'][cuverNumber])
         clicked_trace_fillcolor = fig['data'][cuverNumber]['fillcolor']
         fig.update_traces(opacity=0.2)
         fig.update_traces(opacity=1, selector=dict(name=clicked_trace_fillcolor))
