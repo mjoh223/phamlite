@@ -63,7 +63,6 @@ class Locus:
         orf_trace_list = []
         for orf in self.orfs:
             id = '|'.join([self.accessions, orf.id[0]])
-            orf.pham = self.phamdf[id]
             self.color = pham_color_dict[orf.pham]
             x, y = draw_shape(orf.location.start, orf.location.end, orf.location.strand, z, h, self.firstorf, self.lastorf)
             trace = go.Scatter(x=x, y=y, name = self.color, marker=dict(size=1), line=dict(width=1), opacity=1,fill='toself', fillcolor=self.color, line_color='gray', text='{}|{}'.format(orf.id[0], orf.getProduct()),hoverinfo='text' )
@@ -254,7 +253,13 @@ def cluster(phages, working_path):
                 orf_id = '{}|{}'.format(phage.accessions, orf.id[0])
                 if orf_id == row[1]:
                     orf.alignment.append(row.tolist()) #jsonpickling only works when you convert np Series to list
-    return pd.read_csv(os.path.join(working_path, 'cluster_data/' 'DB_clu.tsv'), sep='\t',header=None, names=['representative','member'])
+    cluster_tsv = pd.read_csv(os.path.join(working_path, 'cluster_data/' 'DB_clu.tsv'), sep='\t',header=None, names=['representative','member'])
+    for index, row in cluster_tsv.iterrows():
+        for phage in phages:
+            for orf in phage.orfs:
+                if row[1] == '{}|{}'.format(phage.accessions, orf.id[0]):
+                    orf.pham = row[0]
+    return cluster_tsv
 
 def blastn(phages, working_path):
     for phage in phages:
@@ -327,6 +332,9 @@ def draw_repeat(start,stop,strand,z,h,firstorf,lastorf):
         x=(start,start,stop,stop,start)
         y=(z,z-h,z-h,z,z)
     return x,y
+
+def draw_align_text(alignment):
+    target_start
 
 def graphing(phamcolor_dict, phages, blast_di, order, choice_dict):
     print(phages)
@@ -463,7 +471,10 @@ def layout():
                 dcc.Store(id='hidden_phages'),
                 dcc.Store(id='hidden_blast_di'),
                 ]),
-            ])
+        dbc.Row([
+                html.Div(id="table-container")
+                ]),
+        ])
     return layout
 
 def window(seq, n):
@@ -512,8 +523,6 @@ def load_dropdown(list_of_contents, list_of_names, list_of_dates):
         pham_df = cluster(phages, f)
         labels = [ {'label':x.annotations['organism'], 'value':i} for i, x in enumerate(phages) ]
         pham_df = dict(zip(pham_df['member'], pham_df['representative']))
-        for phage in phages:
-            phage.phamdf = pham_df
         phams = set(pham_df.values())
         rgb_values = ['rgb{}'.format(tuple(np.random.choice(range(256), size=3))) for i in range(len(phams))]
         pham_color_dict = dict(zip(phams,rgb_values))
@@ -525,8 +534,13 @@ def load_dropdown(list_of_contents, list_of_names, list_of_dates):
     else:
         print('empty', flush=True)
         raise dash.exceptions.PreventUpdate
-
+def make_aln_table(phages,selected):
+    for phage in phages:
+        for orf in phage.orfs:
+            if selected['text'].split('|')[0] == orf.id[0]:
+                print(orf.alignment)
 @app.callback(Output('phamlite', 'figure'),
+               Output("table-container", "children"),
               [Input('dropdown', 'value'),
                Input('hidden_phamcolor_dict','data'),
                Input('hidden_phages','data'),
@@ -537,6 +551,7 @@ def update_output(selected_order, phamcolor_dict, phages, blast_di, clickData, d
     trigger = dash.callback_context.triggered[0]['prop_id']
     if trigger == '.':
         raise dash.exceptions.PreventUpdate
+    me = dbc.Table.from_dataframe(pd.DataFrame({}))
     phamcolor_dict = jsonpickle.decode(phamcolor_dict)
     phages = jsonpickle.decode(phages)
     blast_di = jsonpickle_pd.decode(blast_di)
@@ -553,7 +568,9 @@ def update_output(selected_order, phamcolor_dict, phages, blast_di, clickData, d
         clicked_trace_fillcolor = fig['data'][cuverNumber]['fillcolor']
         fig.update_traces(opacity=0.2)
         fig.update_traces(opacity=1, selector=dict(name=clicked_trace_fillcolor))
-
-    return fig
+        make_aln_table(phages, fig['data'][cuverNumber])
+        df = pd.DataFrame({})
+        me = dbc.Table.from_dataframe(df)
+    return fig, me
 
 app.run_server(debug=True)
