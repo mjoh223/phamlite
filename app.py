@@ -176,6 +176,7 @@ class Orf(object):
         self.type = feature.type
         self.location = feature.location
         self.qualifiers = feature.qualifiers
+        self.alignment = None
         try:
             self.id = self.qualifiers['protein_id']
         except:
@@ -245,6 +246,15 @@ def cluster(phages, working_path):
                  os.path.join(working_path,'cluster_data','DB_clu.tsv'),
                  ]
     subprocess.run(createtsv, shell=False)
+    #write something here to parse the m8 file and give the results to the orfs
+    alignments = pd.read_csv(os.path.join(working_path, 'cluster_out/', 'aln.m8'),delimiter='\t', header=None)
+    for index, row in alignments.iterrows():
+        for phage in phages:
+            for orf in phage.orfs:
+                orf_id = '{}|{}'.format(phage.accessions, orf.id[0])
+                if orf_id == row[1]:
+                    print('hi')
+                    orf.alignment = row
     return pd.read_csv(os.path.join(working_path, 'cluster_data/' 'DB_clu.tsv'), sep='\t',header=None, names=['representative','member'])
 
 def blastn(phages, working_path):
@@ -320,6 +330,7 @@ def draw_repeat(start,stop,strand,z,h,firstorf,lastorf):
     return x,y
 
 def graphing(phamcolor_dict, phages, blast_di, order, choice_dict):
+    print(phages)
     labels = [ {'label':x.annotations['organism'], 'value':i} for i, x in enumerate(phages) ]
     #sorted_phages = sorted(phages, key=lambda x: x.annotations['organism'])
     order = [phages[x] for x in order]
@@ -500,9 +511,9 @@ def load_dropdown(list_of_contents, list_of_names, list_of_dates):
         phages = load_phages(phage_list)
         blast_di = blastn(phages, f)
         pham_df = cluster(phages, f)
+        print(phages)
         labels = [ {'label':x.annotations['organism'], 'value':i} for i, x in enumerate(phages) ]
         pham_df = dict(zip(pham_df['member'], pham_df['representative']))
-        print(pham_df)
         for phage in phages:
             phage.phamdf = pham_df
         phams = set(pham_df.values())
@@ -528,6 +539,7 @@ def update_output(selected_order, phamcolor_dict, phages, blast_di, clickData, d
     if trigger == '.':
         raise dash.exceptions.PreventUpdate
     phamcolor_dict = jsonpickle.decode(phamcolor_dict)
+    print(phages)
     phages = jsonpickle.decode(phages)
     blast_di = jsonpickle_pd.decode(blast_di)
     #if no parameters are pressed
