@@ -488,6 +488,17 @@ def window(seq, n):
         result = result[1:] + (elem,)
         yield result
 
+def make_aln_table(phages, selected):
+    aln = list()
+    for phage in phages:
+        for orf in phage.orfs:
+            if selected['text'].split('|')[0] == orf.id[0]:
+                selected_pham = orf.pham
+    for phage in phages:
+        for orfa in phage.orfs:
+            if selected_pham == orfa.pham:
+                aln.append(orfa.alignment[0])
+    return pd.DataFrame(aln)
 app.layout = layout()
 
 @app.callback([Output('dropdown','options'),
@@ -528,17 +539,12 @@ def load_dropdown(list_of_contents, list_of_names, list_of_dates):
         pham_color_dict = dict(zip(phams,rgb_values))
         pham_color_dict = jsonpickle.encode(pham_color_dict)
         phages = jsonpickle.encode(phages)
-        print(phages)
         blast_di = jsonpickle_pd.encode(blast_di)
         return labels, list(range(len(labels))), pham_color_dict, phages, blast_di
     else:
         print('empty', flush=True)
         raise dash.exceptions.PreventUpdate
-def make_aln_table(phages,selected):
-    for phage in phages:
-        for orf in phage.orfs:
-            if selected['text'].split('|')[0] == orf.id[0]:
-                print(orf.alignment)
+
 @app.callback(Output('phamlite', 'figure'),
                Output("table-container", "children"),
               [Input('dropdown', 'value'),
@@ -568,8 +574,8 @@ def update_output(selected_order, phamcolor_dict, phages, blast_di, clickData, d
         clicked_trace_fillcolor = fig['data'][cuverNumber]['fillcolor']
         fig.update_traces(opacity=0.2)
         fig.update_traces(opacity=1, selector=dict(name=clicked_trace_fillcolor))
-        make_aln_table(phages, fig['data'][cuverNumber])
-        df = pd.DataFrame({})
+        df = make_aln_table(phages, fig['data'][cuverNumber])
+        #df = pd.DataFrame({})
         me = dbc.Table.from_dataframe(df)
     return fig, me
 
