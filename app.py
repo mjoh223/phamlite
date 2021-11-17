@@ -5,6 +5,7 @@ from dash import html
 from dash.dependencies import Input, Output, State
 import pandas as pd
 from Bio import SeqIO, SeqUtils
+from Bio import SearchIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 import os
@@ -282,6 +283,23 @@ def blastn(phages, working_path):
         results_di[os.path.basename(blast_out)] = results
     return results_di
 
+def hmmscan(phages, working_path):
+    hmm_db = '/Users/matt/Desktop/island.hmm'
+    query_fasta = os.path.join(working_path, 'faa', 'orfs_pool.faa')
+    hmmscan = ['hmmscan',
+               '--domtblout',
+               os.path.join(working_path, 'hmm.out'),
+               hmm_db,
+               query_fasta,
+               ]
+    subprocess.run(hmmscan, shell=False)
+    #hmm_df = pd.read_csv(os.path.join(working_path, 'hmm.out'), comment='#')
+    for qresult in SearchIO.parse(os.path.join(working_path, 'hmm.out'), 'hmmscan3-domtab'):
+        for phage in phages:
+            for orf in phage.orfs:
+                if qresult.id.split('|')[1] == orf.id[0]:
+                    orf.hmm_island = qresult
+
 def load_phages(phage_list):
     genome_list = []
     for phage in phage_list:
@@ -332,9 +350,6 @@ def draw_repeat(start,stop,strand,z,h,firstorf,lastorf):
         x=(start,start,stop,stop,start)
         y=(z,z-h,z-h,z,z)
     return x,y
-
-def draw_align_text(alignment):
-    target_start
 
 def graphing(phamcolor_dict, phages, blast_di, order, choice_dict):
     print(phages)
@@ -447,7 +462,7 @@ def layout():
                                 {"label": "hide synteny ribbons", "value": 'trace_bool'},
                                 {"label": "hide repeats", "value": 'repeat_bool'},
                                 {"label": "hide tRNAs", "value": 'trna_bool'},
-                                {"label": "show GC% trace", "value": 'gc_bool'}])
+                                {"label": "show GC% trace", "value": 'gc_bool'}]),
                     ])
                 ]),
         dbc.Row([
@@ -472,7 +487,8 @@ def layout():
                 dcc.Store(id='hidden_blast_di'),
                 ]),
         dbc.Row([
-                html.Div(id="table-container")
+                dbc.Col([html.Div(id="table-container")
+                    ]),
                 ]),
         ])
     return layout
@@ -532,6 +548,8 @@ def load_dropdown(list_of_contents, list_of_names, list_of_dates):
         phages = load_phages(phage_list)
         blast_di = blastn(phages, f)
         pham_df = cluster(phages, f)
+        hmmscan(phages, f)
+        print(hmm_table)
         labels = [ {'label':x.annotations['organism'], 'value':i} for i, x in enumerate(phages) ]
         pham_df = dict(zip(pham_df['member'], pham_df['representative']))
         phams = set(pham_df.values())
@@ -557,7 +575,7 @@ def update_output(selected_order, phamcolor_dict, phages, blast_di, clickData, d
     trigger = dash.callback_context.triggered[0]['prop_id']
     if trigger == '.':
         raise dash.exceptions.PreventUpdate
-    me = dbc.Table.from_dataframe(pd.DataFrame({}))
+    aln_table = dbc.Table.from_dataframe(pd.DataFrame({}))
     phamcolor_dict = jsonpickle.decode(phamcolor_dict)
     phages = jsonpickle.decode(phages)
     blast_di = jsonpickle_pd.decode(blast_di)
@@ -575,8 +593,7 @@ def update_output(selected_order, phamcolor_dict, phages, blast_di, clickData, d
         fig.update_traces(opacity=0.2)
         fig.update_traces(opacity=1, selector=dict(name=clicked_trace_fillcolor))
         df = make_aln_table(phages, fig['data'][cuverNumber])
-        #df = pd.DataFrame({})
-        me = dbc.Table.from_dataframe(df)
-    return fig, me
+        aln_table = dbc.Table.from_dataframe(df, striped=True, bordered=True, hover=True)
+    return fig, aln_table
 
 app.run_server(debug=True)
