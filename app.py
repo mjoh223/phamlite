@@ -31,7 +31,7 @@ from colour import Color
 import plotly.express as px
 from itertools import islice
 from Bio.SeqUtils import GC
-
+from pprint import pprint
 #external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.LITERA]) #external_stylesheets=external_stylesheets)
 server = app.server
@@ -67,6 +67,7 @@ class Locus:
             self.color = pham_color_dict[orf.pham]
             x, y = draw_shape(orf.location.start, orf.location.end, orf.location.strand, z, h, self.firstorf, self.lastorf)
             trace = go.Scatter(x=x, y=y, name = self.color, marker=dict(size=1), line=dict(width=1), opacity=1,fill='toself', fillcolor=self.color, line_color='gray', text='{}|{}'.format(orf.id[0], orf.getProduct()),hoverinfo='text' )
+            orf.orf_trace = trace
             orf_trace_list.append(trace)
         return orf_trace_list
     def load_trna_trace(self,z=0,h=0.2):
@@ -142,6 +143,25 @@ class Locus:
         trace = go.Scatter(x=x, y=norm_y, line=dict(width=1,color='gray'))
         #mean = go.Scatter(x=[0, len(self.fna)], y=[np.mean(norm_y),np.mean(norm_y)], line=dict(width=1,color='black'))
         return [trace]
+    def draw_hmm_island(self, z ,h):
+        for orf in self.orfs:
+            if hasattr(orf, 'hmm_island'):
+                #pprint(vars(orf.hmm_island[0]))
+                island_hit_id = orf.hmm_island[0].id
+                eval = orf.hmm_island[0].evalue
+                hsps = orf.hmm_island[0].hsps
+                #print(island_hit_id)
+                hit_set = set()
+                for item in orf.hmm_island[0]._items:
+                    domain_start = item.env_start
+                    domain_end = item.env_end
+                    hit = (island_hit_id, eval, domain_start, domain_end)
+                    hit_set.add(hit)
+                orf.hmm_stats = hit_set
+                # for hsp in hsps:
+                #     #print(dir(hsp))
+                #     print(hsp.hit)
+                #     print(orf.orf_trace)
 
 class TRNA(object):
     def __init__(self, feature):
@@ -287,6 +307,8 @@ def hmmscan(phages, working_path):
     hmm_db = '/Users/matt/Desktop/island.hmm'
     query_fasta = os.path.join(working_path, 'faa', 'orfs_pool.faa')
     hmmscan = ['hmmscan',
+               '-o',
+               os.path.join(working_path, 'hmm_verbose.out'),
                '--domtblout',
                os.path.join(working_path, 'hmm.out'),
                hmm_db,
@@ -298,7 +320,7 @@ def hmmscan(phages, working_path):
         for phage in phages:
             for orf in phage.orfs:
                 if qresult.id.split('|')[1] == orf.id[0]:
-                    orf.hmm_island = qresult
+                    orf.hmm_island = list(qresult)
 
 def load_phages(phage_list):
     genome_list = []
@@ -352,7 +374,7 @@ def draw_repeat(start,stop,strand,z,h,firstorf,lastorf):
     return x,y
 
 def graphing(phamcolor_dict, phages, blast_di, order, choice_dict):
-    print(phages)
+
     labels = [ {'label':x.annotations['organism'], 'value':i} for i, x in enumerate(phages) ]
     #sorted_phages = sorted(phages, key=lambda x: x.annotations['organism'])
     order = [phages[x] for x in order]
@@ -380,6 +402,8 @@ def graphing(phamcolor_dict, phages, blast_di, order, choice_dict):
     if choice_dict['gc_bool'] is True:
         for z, phage in enumerate(order):
             [fig.add_trace(x) for x in phage.draw_gc_content(z, 500)]
+    for z, phage in enumerate(order):
+        phage.draw_hmm_island(z, 0.2)
     fig.update_layout(
         yaxis = dict(
             showgrid = False,
@@ -549,7 +573,6 @@ def load_dropdown(list_of_contents, list_of_names, list_of_dates):
         blast_di = blastn(phages, f)
         pham_df = cluster(phages, f)
         hmmscan(phages, f)
-        print(hmm_table)
         labels = [ {'label':x.annotations['organism'], 'value':i} for i, x in enumerate(phages) ]
         pham_df = dict(zip(pham_df['member'], pham_df['representative']))
         phams = set(pham_df.values())
