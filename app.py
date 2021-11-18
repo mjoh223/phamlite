@@ -36,7 +36,7 @@ from pprint import pprint
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.LITERA]) #external_stylesheets=external_stylesheets)
 server = app.server
 def makedir(f):
-    directories = ['tmp','faa','fna','blast_out','cluster_data','cluster_out']
+    directories = ['tmp','faa','fna','blast_out','cluster_data','cluster_out', 'gembase']
     for basename in directories:
         os.mkdir( os.path.join(f, basename) )
 
@@ -155,6 +155,10 @@ class Locus:
                     trace = go.Scatter(x=x, y=y, name = name, marker=dict(size=1), line=dict(width=1), opacity=1,fill='toself', fillcolor='black', line_color='gray', text=name,hoverinfo='text' )
                     trace_list.append(trace)
         return trace_list
+    def create_gembase(self, working_path):
+        orfs = [SeqRecord(Seq(x.getSeq()[0]), id=x.id[0],description='') for x in self.orfs]
+        with open(os.path.join(working_path,'gembase',self.filename+'.gem'), "w") as output_handle:
+            SeqIO.write(orfs, output_handle, "fasta")
 
 class TRNA(object):
     def __init__(self, feature):
@@ -554,6 +558,11 @@ def make_aln_table(phages, selected):
             if selected_pham == orfa.pham:
                 aln.append(orfa.alignment[0])
     return pd.DataFrame(aln)
+
+def randomString(stringLength=8):
+    letters = string.ascii_lowercase
+    return ''.join(random.choice(letters) for i in range(stringLength))
+
 app.layout = layout()
 
 @app.callback([Output('dropdown','options'),
@@ -565,9 +574,6 @@ app.layout = layout()
           [State('upload-data','filename'),
            State('upload-data','last_modified')])
 def load_dropdown(list_of_contents, list_of_names, list_of_dates):
-    def randomString(stringLength=8):
-        letters = string.ascii_lowercase
-        return ''.join(random.choice(letters) for i in range(stringLength))
     storage_path = '/Users/Matt/Desktop/phamlite_storage/'
     os.makedirs(storage_path, exist_ok=True)
     if list_of_contents is not None:
@@ -585,6 +591,8 @@ def load_dropdown(list_of_contents, list_of_names, list_of_dates):
                 pass
         phage_list = glob.glob(os.path.join(f, '*.gb'))
         phages = load_phages(phage_list)
+        [x.create_gembase(f) for x in phages]
+        print(dfa)
         blast_di = blastn(phages, f)
         pham_df = cluster(phages, f)
         hmmscan(phages, f)
