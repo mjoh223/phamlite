@@ -78,7 +78,7 @@ class Locus:
             self.lastorf = np.max(list_of_starts)
             for trna in self.tRNAs:
                 if trna.location is None:
-                    continue
+                    pass
                 start, stop, strand = trna.location.start, trna.location.end, trna.location.strand
                 linecolor = 'gold'
                 opacity = 1
@@ -144,24 +144,18 @@ class Locus:
         #mean = go.Scatter(x=[0, len(self.fna)], y=[np.mean(norm_y),np.mean(norm_y)], line=dict(width=1,color='black'))
         return [trace]
     def draw_hmm_island(self, z ,h):
+        trace_list = list()
         for orf in self.orfs:
-            if hasattr(orf, 'hmm_island'):
-                #pprint(vars(orf.hmm_island[0]))
-                island_hit_id = orf.hmm_island[0].id
-                eval = orf.hmm_island[0].evalue
-                hsps = orf.hmm_island[0].hsps
-                #print(island_hit_id)
-                hit_set = set()
-                for item in orf.hmm_island[0]._items:
-                    domain_start = item.env_start
-                    domain_end = item.env_end
-                    hit = (island_hit_id, eval, domain_start, domain_end)
-                    hit_set.add(hit)
-                orf.hmm_stats = hit_set
-                # for hsp in hsps:
-                #     #print(dir(hsp))
-                #     print(hsp.hit)
-                #     print(orf.orf_trace)
+            if hasattr(orf, 'hmm_stats'):
+                for hsp in orf.hmm_stats:
+                    orf_start = orf.orf_trace['x'][0]
+                    name, eval, start, stop = hsp
+                    x = (orf_start+start, orf_start+stop, orf_start+stop, orf_start+start)
+                    y = (z, z, z+h, z+h)
+                    trace = go.Scatter(x=x, y=y, name = name, marker=dict(size=1), line=dict(width=1), opacity=1,fill='toself', fillcolor='black', line_color='gray', text=name,hoverinfo='text' )
+                    trace_list.append(trace)
+        return trace_list
+
 
 class TRNA(object):
     def __init__(self, feature):
@@ -321,6 +315,17 @@ def hmmscan(phages, working_path):
             for orf in phage.orfs:
                 if qresult.id.split('|')[1] == orf.id[0]:
                     orf.hmm_island = list(qresult)
+                    island_hit_id = orf.hmm_island[0].id
+                    eval = orf.hmm_island[0].evalue
+                    hsps = orf.hmm_island[0].hsps
+                    #print(island_hit_id)
+                    hit_set = set()
+                    for item in orf.hmm_island[0]._items:
+                        domain_start = item.env_start
+                        domain_end = item.env_end
+                        hit = (island_hit_id, eval, domain_start, domain_end)
+                        hit_set.add(hit)
+                    orf.hmm_stats = hit_set
 
 def load_phages(phage_list):
     genome_list = []
@@ -403,7 +408,10 @@ def graphing(phamcolor_dict, phages, blast_di, order, choice_dict):
         for z, phage in enumerate(order):
             [fig.add_trace(x) for x in phage.draw_gc_content(z, 500)]
     for z, phage in enumerate(order):
-        phage.draw_hmm_island(z, 0.2)
+        try:
+            [fig.add_trace(x) for x in phage.draw_hmm_island(z, 0.2)]
+        except:
+            pass
     fig.update_layout(
         yaxis = dict(
             showgrid = False,
@@ -567,7 +575,7 @@ def load_dropdown(list_of_contents, list_of_names, list_of_dates):
                 with open( os.path.join(f,'{}.gb'.format(str(i)) ) ,"w+") as handle:
                     handle.write(file_content.decode("utf-8"))
             except ValueError:
-                continue
+                pass
         phage_list = glob.glob(os.path.join(f, '*.gb'))
         phages = load_phages(phage_list)
         blast_di = blastn(phages, f)
