@@ -156,7 +156,6 @@ class Locus:
                     trace_list.append(trace)
         return trace_list
 
-
 class TRNA(object):
     def __init__(self, feature):
         self.type = feature.type
@@ -222,6 +221,7 @@ def cluster(phages, working_path):
                 input_file,
                 os.path.join(working_path, 'cluster_out', 'DB'),
                 ]
+    print('clustering phams')
     subprocess.run(createdb, shell=False)
     cluster = ['{}/mmseqs'.format(binb),
                'cluster',
@@ -234,6 +234,8 @@ def cluster(phages, working_path):
     subprocess.run(cluster, shell=False)
     align = ['{}/mmseqs'.format(binb),
                'align',
+               '-v',
+               '0',
                os.path.join(working_path, 'cluster_out', 'DB'),
                os.path.join(working_path, 'cluster_out', 'DB'),
                os.path.join(working_path, 'cluster_out', 'DB_clu'),
@@ -243,6 +245,8 @@ def cluster(phages, working_path):
     subprocess.run(align, shell=False)
     convertalis = ['{}/mmseqs'.format(binb),
                'convertalis',
+               '-v',
+               '0',
                os.path.join(working_path, 'cluster_out', 'DB'),
                os.path.join(working_path, 'cluster_out', 'DB'),
                os.path.join(working_path, 'cluster_out', 'aln'),
@@ -260,6 +264,7 @@ def cluster(phages, working_path):
                  os.path.join(working_path,'cluster_data','DB_clu.tsv'),
                  ]
     subprocess.run(createtsv, shell=False)
+    print('done')
     #write something here to parse the m8 file and give the results to the orfs
     alignments = pd.read_csv(os.path.join(working_path, 'cluster_out/', 'aln.m8'),delimiter='\t', header=None)
     for index, row in alignments.iterrows():
@@ -289,8 +294,10 @@ def blastn(phages, working_path):
             handle.write(str(blastx_cline))
             handle.write('\n')
         handle.close()
+    print('running blastn')
     with open(os.path.join(working_path, 'commands.txt'), 'r') as f:
         subprocess.run(['/usr/local/bin/parallel'], stdin=f, check=True)
+    print('done')
     results_di = {}
     for blast_out in glob.glob(os.path.join(working_path, "blast_out", '*.out')):
         results = pd.read_csv(blast_out, sep='\t',comment='#', names=['query', 'subject', 'identity', 'alignment' 'length', 'mismatches', 'gap_opens', 'q_start', 'q_end', 's_start', 's_end', 'evalue', 'bit_score'])
