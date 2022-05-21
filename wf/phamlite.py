@@ -1,7 +1,7 @@
 import dash
 import dash_bootstrap_components as dbc
-from dash import dcc
-from dash import html
+import dash_core_components as dcc
+import dash_html_components as html
 from dash.dependencies import Input, Output, State
 import pandas as pd
 from Bio import SeqIO, SeqUtils
@@ -14,8 +14,6 @@ import glob
 from Bio.Blast.Applications import NcbiblastnCommandline
 import shutil
 import jsonpickle
-import jsonpickle.ext.pandas as jsonpickle_pd
-jsonpickle_pd.register_handlers()
 import subprocess
 import csv
 import plotly.graph_objects as go
@@ -27,13 +25,13 @@ import io
 import json
 import numpy as np
 from colour import Color
-import plotly.express as px
 
-#external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-app = dash.Dash(__name__) #external_stylesheets=external_stylesheets)
-server = app.server
+def randomString(stringLength=8):
+    letters = string.ascii_lowercase
+    return ''.join(random.choice(letters) for i in range(stringLength))
+
 def makedir(f):
-    directories = ['tmp','faa','fna','blast_out','cluster_data','cluster_out']
+    directories = ['tmp','faa','fna','blast_out','cluster_data','cluster_out','seeker_output']
     for basename in directories:
         os.mkdir( os.path.join(f, basename) )
 
@@ -43,7 +41,7 @@ class Locus:
         self.tRNAs = []
         self.repeat_regions = []
         self.annotations = ann
-        self.fna = str(fna)
+        self.fna = fna
         self.filename = filename
         self.phams = []
         self.gc_skew = []
@@ -53,18 +51,17 @@ class Locus:
         trace_list = []
         self.gc_skew = SeqUtils.GC_skew(self.fna, window)
         length = int(len(self.fna))
-        bin_size = int(200000 /window)
+        bin_size = int(length/window)
         red = Color("red")
         blue = Color("blue")
         color_scale = list(red.range_to(blue, 1000))
         for i, b in enumerate( range(0, length, bin_size) ):
-            print(self.gc_skew[i])
-            if self.gc_skew[i] > 0:
+            if self.gc_skew[i] > .5:
                 color = 'blue'
             else:
                 color= 'red'
-            x, y = draw_shape(b, b+bin_size, 'nostrand' ,z, 0.2, 'na', 'na')
-            trace = px.scatter(x=x, y=y,color_continuous_scale=px.colors.sequential.Cividis_r)
+            x, y = draw_shape(b, bin_size, 'nostrand' ,z, 0.2, 'na', 'na')
+            trace = go.Scatter(x=x, y=y, marker=dict(size=1), opacity=1,fill='toself', fillcolor=color, line_color=color )
             trace_list.append(trace)
         return trace_list
 
@@ -75,6 +72,7 @@ class Locus:
         if feature.type == 'CDS':
             self.orfs.append(feature)
         if feature.type == 'tRNA':
+            print(feature)
             self.tRNAs.append(feature)
         if feature.type == 'repeat_region':
             self.repeat_regions.append(feature)
@@ -105,7 +103,7 @@ class Locus:
             #     color = "gray"
             #     opacity = 0.3
             x, y = draw_shape(start, stop, strand, z, h, self.firstorf, self.lastorf)
-            trace = go.Scatter(x=x, y=y, marker=dict(size=1), opacity=opacity,fill=fill, fillcolor=color, line_color=linecolor, text='{}|{}'.format(orf.id[0], orf.getProduct()),hoverinfo='text' )
+            trace = go.Scatter(x=x, y=y, marker=dict(size=1), opacity=opacity,fill=fill, fillcolor=color, line_color=linecolor, text='{}|{}'.format(orf.getProduct(), self.annotations['organism']),hoverinfo='text' )
             trace_list.append(trace)
         return trace_list
     def load_trna_trace(self,z=0,h=0.2):
@@ -114,6 +112,8 @@ class Locus:
         trace_list = []
         if len(self.tRNAs) > 0:
             for trna in self.tRNAs:
+                print(trna)
+                print(dir(trna.location))
                 if trna.location is None:
                     continue
                 start, stop, strand = trna.location.start, trna.location.end, trna.location.strand
@@ -159,7 +159,16 @@ class Locus:
                     if percent_id > 90:
                         shade = 'green'
                     end = len(self.fna)
-
+                    #if source_h in [0]:
+                    #    accession = order[source_h][0]
+                    #    end = [len(x.fna) for x in phages if x.accessions == accession][0]
+                    #    source_start = (end-source_start)
+                    #    source_end = (end-source_end)
+                    #if target_h in [0]:
+                    #    accession = order[target_h][0]
+                    #    end = [len(x.fna) for x in phages if x.accessions == accession][0]
+                    #    target_start = (end-target_start)
+                    #    target_end = (end-target_end)
                     x=(source_start, target_start, target_end, source_end, source_start)
                     y=(source_h, target_h, target_h, source_h, source_h)
 
@@ -169,7 +178,13 @@ class Locus:
                     x=(source_start, target_start, target_end, source_end, source_start)
                     y=(source_h, target_h, target_h, source_h, source_h)
                     shade_trace = go.Scatter(x=x,y=y,marker=dict(size=1),fill='toself',fillcolor=shade,line_color=shade,opacity=.1,text='{}%'.format(percent_id),hoverinfo='text')
+                    #boundary_left = go.Scatter(x=(source_start, target_start),y=(source_h, target_h),line_color = shade, mode = 'lines',opacity=.5)
+                    #boundary_right = go.Scatter(x=(target_end, source_end),y=(target_h, source_h),line_color = shade, mode = 'lines',opacity=.5)
                     shade_trace_list.append(shade_trace)
+                    # boundary_left_list.append(boundary_left)
+                    # boundary_right_list.append(boundary_right)
+
+
         return shade_trace_list#, boundary_left_list, boundary_right_list
 
 class TRNA(object):
@@ -208,11 +223,12 @@ class Orf(object):
         try:
             self.id = self.qualifiers['protein_id']
         except:
-            self.id = list('protein_{}'.format(i))
+            self.id = 'protein_{}'.format(i)
     def getSeq(self):
         try:
             protein = self.qualifiers['translation']
         except:
+            print(self.id)
             protein = ['']
         return protein
     def getProduct(self):
@@ -227,8 +243,6 @@ class Orf(object):
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__,
             sort_keys=True, indent=4)
-    def encode(self):
-        return self.__dict__
 
 def cluster(phages, working_path):
     f = open(os.path.join(working_path, 'faa', 'orfs_pool.faa'), 'w')
@@ -237,30 +251,30 @@ def cluster(phages, working_path):
             f.write('\n>{}|{}\n'.format(phage.accessions, orf.id[0]))
             f.write(orf.getSeq()[0])
     f.close()
-    binb = '/usr/local/bin/'
     input_file = os.path.join(working_path, 'faa', 'orfs_pool.faa')
-    createdb = ['{}/mmseqs'.format(binb),
+    createdb = ['mmseqs',
                 'createdb',
-                '-v',
-                '0',
                 input_file,
                 os.path.join(working_path, 'cluster_out', 'DB')]
+    print(createdb)
     subprocess.run(createdb, shell=False)
-    cluster = ['{}/mmseqs'.format(binb),
+    cluster = ['mmseqs',
                'cluster',
                '-v',
                '0',
                os.path.join(working_path, 'cluster_out', 'DB'),
                os.path.join(working_path, 'cluster_out', 'DB_clu'),
                os.path.join(working_path, 'tmp')]
+    print(cluster)
     subprocess.run(cluster, shell=False)
     #mmseqs createtsv DB DB DB_clu DB_clu.tsv
-    createtsv = ['{}/mmseqs'.format(binb),
+    createtsv = ['mmseqs',
                  'createtsv',
                  os.path.join(working_path,'cluster_out', 'DB'),
                  os.path.join(working_path,'cluster_out', 'DB'),
                  os.path.join(working_path,'cluster_out', 'DB_clu'),
                  os.path.join(working_path,'cluster_data','DB_clu.tsv')]
+    print(createtsv)
     subprocess.run(createtsv, shell=False)
     return pd.read_csv(os.path.join(working_path, 'cluster_data/' 'DB_clu.tsv'), sep='\t',header=None, names=['representative','member'])
 
@@ -276,9 +290,10 @@ def blastn(phages, working_path):
             handle.write(str(blastx_cline))
             handle.write('\n')
         handle.close()
+    #parallel = ['/home/jbd_apps/bin/parallel', '<', os.path.join(working_path, 'commands.txt')]
     with open(os.path.join(working_path, 'commands.txt'), 'r') as f:
         print(f)
-        subprocess.run(['/usr/local/bin/parallel'], stdin=f, check=True)
+        subprocess.run('parallel', stdin=f, check=True)
     results_di = {}
     for blast_out in glob.glob(os.path.join(working_path, "blast_out", '*.out')):
         results = pd.read_csv(blast_out, sep='\t',comment='#', names=['query', 'subject', 'identity', 'alignment' 'length', 'mismatches', 'gap_opens', 'q_start', 'q_end', 's_start', 's_end', 'evalue', 'bit_score'])
@@ -304,16 +319,16 @@ def load_phages(phage_list):
 def draw_shape(start,stop,strand, z, h, firstorf, lastorf):
     start, stop = int(start), int(stop)
     if strand == 1:
-        x = (start, start+50, start, stop-50, stop, stop-50, start)
-        y = (z, z+h/2, z+h, z+h, z+h/2, z, z)
+        x=(start, start+50, start, stop-50, stop, stop-50, start)
+        y=(z, z+h/2, z+h, z+h, z+h/2, z, z)
     elif strand == -1:
-        x = (start+50, start, start+50, stop, stop-50, stop, start+50)
-        y = (z, z-h/2, z-h, z-h, z-h/2, z, z)
+        x=(start+50, start, start+50, stop, stop-50, stop, start+50)
+        y=(z, z-h/2, z-h, z-h, z-h/2, z, z)
     else:
-        z = z + 0.5 #offset height
-        x = start
-        y = z
-    return x, y
+        z = z+0.5 #offset height
+        x=(start, start, stop, stop, start)
+        y=(z, z+h, z+h, z, z)
+    return x,y
 
 def draw_trna(start,stop,strand,z,h,firstorf,lastorf):
     start,stop = int(start), int(stop)
@@ -335,27 +350,26 @@ def draw_repeat(start,stop,strand,z,h,firstorf,lastorf):
         y=(z,z-h,z-h,z,z)
     return x,y
 
-def graphing(pham_df, phages, blast_di, order):
+def graphing(pham_df, phages, blast_di):
     phams = set(pham_df.representative)
     rgb_values = ['rgb{}'.format(tuple(np.random.choice(range(256), size=3))) for i in range(len(phams))]
     pham_color_dict = dict(zip(phams,rgb_values))
-    #sorted_phages = sorted(phages, key=lambda x: x.annotations['organism'])
-    order = [phages[x] for x in order]
-    order_reduced = list(zip([x.accessions for x in order], range(len(order))))
+    sorted_phages = sorted(phages, key=lambda x: x.annotations['organism'])
+    #order = [phages[x] for x in order]
+    order_reduced = list(zip([x.accessions for x in sorted_phages], range(len(sorted_phages))))
+
     fig = go.Figure(layout={'width':1200,'height':1200})
-    for z, phage in enumerate(order):
+    for z, phage in enumerate(sorted_phages):
         fig.add_trace(go.Scatter(x=(0,len(phage.fna)),y=(z,z), mode='lines', line=dict(color='black', width=4, dash='dash')))
         shade = phage.load_syn_trace(blast_di, order_reduced, phages, z)
         [fig.add_trace(x) for x in shade]
-    for z, phage in enumerate(order):
-        #print(phage.load_gc_trace(2, 50))
+    for z, phage in enumerate(sorted_phages):
         try:
             [fig.add_trace(x) for x in phage.load_repeat_trace(z, 0.2)]
         except ValueError:
             pass
         if len(phage.orfs) > 0:
             [fig.add_trace(x) for x in phage.load_orf_trace(pham_color_dict, pham_df, z, 0.2)]
-            #[fig.add_trace(x) for x in phage.load_gc_trace(z,50)]
         if len(phage.tRNAs) > 0:
             [fig.add_trace(x) for x in phage.load_trna_trace(z, 0.2)]
 
@@ -370,22 +384,24 @@ def graphing(pham_df, phages, blast_di, order):
             gridcolor = 'gray')
 
         )
-    labels = [x.annotations['organism'] for x in order]
+    labels = [x.annotations['organism'] for x in sorted_phages]
     fig.layout.plot_bgcolor = 'white'
     fig.layout.paper_bgcolor = 'white'
     fig.update_layout(showlegend=False)
     fig.update_layout(
         yaxis = dict(
             tickmode = 'array',
-            tickvals = list(range(len(order))),
+            tickvals = list(range(len(sorted_phages))),
             ticktext = labels,
             )
         )
 
     fig.update_layout(
-            height=(len(order)*50)+200,
+            height=(len(sorted_phages)*60)+500,
             )
     fig.update_xaxes(range=[0, 8000])
+    fig.update_layout(xaxis=dict(rangeslider=dict(visible=True),
+                             type="linear"))
     return fig
 
 def defaultFig():
@@ -401,9 +417,8 @@ def defaultFig():
     return fig
 
 def layout():
-    layout = html.Div([
-    dbc.Row(dbc.Col(html.H1('phamlite'),width=4),justify="center"),
-    dbc.Row([
+    layout = dbc.Container([
+        html.H1('phamlite'),
         html.Div([
              dcc.Upload(
             id='upload-data',
@@ -424,79 +439,38 @@ def layout():
             # Allow multiple files to be uploaded
             multiple=True
                 ),
-             dcc.Store(id='hidden_pham_df'),
-             dcc.Store(id='hidden_phages'),
-             dcc.Store(id='hidden_blast_di'),
-             dcc.Loading(
-                id="loading-1",
-                type="dot",
-                children=dcc.Dropdown(id = 'dropdown',options = [{'label':'select genomes','value': 0}],multi=True)
+             html.Div(id='hidden_pham_df', style={'display': 'none'}),
+             html.Div(id='hidden_phages', style={'display': 'none'}),
+             html.Div(id='hidden_blast_di', style={'display': 'none'}),
+             dcc.Dropdown(
+                id = 'dropdown',
+                options = [{'label':'select genomes','value': 0}],
+                multi=True,
                 ),
-             dcc.Loading(
-                id="loading-2",
-                type="dot",
-                children=dcc.Graph(id='phamlite',figure = defaultFig())
-                ),
+             dbc.Spinner(dcc.Graph(id='phamlite',
+                figure = defaultFig(),
+                 ),)
             ])
-        ],className='mt-4')])
+        ],className='mt-4')
     return layout
 
+def phamlite_runner(local_paths, run_name):
+    storage_path = '/root/phamlite_tmp'
+    f  =  os.path.join(storage_path, randomString(8))
+    os.makedirs(f)
+    makedir(f)
+    #step 1: read inputfile and load phage classes
+    #phage_list = [user_file]
+    phages = load_phages(local_paths)
+    #step 2: pairwise BLASTn between the input genomes
+    blast_di = blastn(phages, f)
+    #step 3: cluster proteins and identify phage families
+    pham_df = cluster(phages, f)
+    #step 4: format the figure labels and graph
+    labels = [ {'label':x.annotations['organism'], 'value':i} for i, x in enumerate(phages) ]
+    fig = graphing(pham_df, phages, blast_di)
+    output_html = '/root/data/{}.html'.format(run_name)
+    fig.write_html(output_html)
+    return output_html
 
-#if __name__ == '__main__':
-app.layout = layout()
-
-@app.callback([Output('dropdown','options'),
-           Output('dropdown','value'),
-           Output('hidden_pham_df','data'),
-           Output('hidden_phages','data'),
-           Output('hidden_blast_di','data')],
-          [Input('upload-data','contents')],
-          [State('upload-data','filename'),
-           State('upload-data','last_modified')])
-def load_dropdown(list_of_contents, list_of_names, list_of_dates):
-    def randomString(stringLength=8):
-        letters = string.ascii_lowercase
-        return ''.join(random.choice(letters) for i in range(stringLength))
-    storage_path = '/Users/matt/Desktop/phamlite_storage'
-    if list_of_contents is not None:
-        f  =  os.path.join(storage_path, randomString(8))
-        print(f, flush=True)
-        os.makedirs(f) #make working directory randomized string
-        makedir(f) #make subdirectories in wd
-        for i, contents in enumerate(list_of_contents):
-            try:
-                content_type, content_string = contents.split(',')
-                file_content = base64.b64decode(content_string)
-                with open( os.path.join(f,'{}.gb'.format(str(i)) ) ,"w+") as handle:
-                    handle.write(file_content.decode("utf-8"))
-            except ValueError:
-                continue
-
-        phage_list = glob.glob(os.path.join(f, '*.gb'))
-        phages = load_phages(phage_list)
-        blast_di = blastn(phages, f)
-        pham_df = cluster(phages, f)
-
-        labels = [ {'label':x.annotations['organism'], 'value':i} for i, x in enumerate(phages) ]
-        pham_df = pham_df.to_json()
-        phages = jsonpickle.encode(phages)
-        blast_di = jsonpickle_pd.encode(blast_di)
-        return labels, list(range(len(labels))), pham_df, phages, blast_di
-    else:
-        print('empty', flush=True)
-        raise dash.exceptions.PreventUpdate
-
-@app.callback(Output('phamlite', 'figure'),
-              [Input('dropdown', 'value'),
-               Input('hidden_pham_df','data'),
-               Input('hidden_phages','data'),
-               Input('hidden_blast_di','data')])
-def update_output(selected_order, pham_df, phages, blast_di):
-    pham_df = pd.read_json(pham_df)
-    phages = jsonpickle.decode(phages)
-    print(phages)
-    blast_di = jsonpickle_pd.decode(blast_di)
-    fig = graphing(pham_df, phages, blast_di, selected_order)
-    return fig
-
-app.run_server(host="0.0.0.0", port="8050", debug=True)
+#app.run_server(host="0.0.0.0", port="8050")
