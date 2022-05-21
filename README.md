@@ -1,4 +1,4 @@
 Phamlite latch workflow
 
-![Alt text](/phamlite/phamlite_screenshot.png?raw=true "phamlite")
+![Alt text](https://github.com/mjoh223/phamlite/blob/master/phamlite_screenshot.png)
 
