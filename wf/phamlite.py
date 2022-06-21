@@ -1,8 +1,3 @@
-import dash
-import dash_bootstrap_components as dbc
-import dash_core_components as dcc
-import dash_html_components as html
-from dash.dependencies import Input, Output, State
 import pandas as pd
 from Bio import SeqIO, SeqUtils
 from Bio.Seq import Seq
@@ -13,7 +8,6 @@ from Bio.Blast import NCBIXML
 import glob
 from Bio.Blast.Applications import NcbiblastnCommandline
 import shutil
-import jsonpickle
 import subprocess
 import csv
 import plotly.graph_objects as go
@@ -22,7 +16,6 @@ import string
 import base64
 import datetime
 import io
-import json
 import numpy as np
 from colour import Color
 
@@ -65,9 +58,6 @@ class Locus:
             trace_list.append(trace)
         return trace_list
 
-    def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__,
-            sort_keys=True, indent=4)
     def add_feature(self,feature):
         if feature.type == 'CDS':
             self.orfs.append(feature)
@@ -99,9 +89,6 @@ class Locus:
             color = pham_color_dict[list(pham_df.iloc[loc,0])[0]]
             linecolor = 'black'
             opacity=1
-            # if orf.getProduct().lower() != 'hypothetical protein':
-            #     color = "gray"
-            #     opacity = 0.3
             x, y = draw_shape(start, stop, strand, z, h, self.firstorf, self.lastorf)
             trace = go.Scatter(x=x, y=y, marker=dict(size=1), opacity=opacity,fill=fill, fillcolor=color, line_color=linecolor, text='{}|{}'.format(orf.getProduct(), self.annotations['organism']),hoverinfo='text' )
             trace_list.append(trace)
@@ -112,8 +99,6 @@ class Locus:
         trace_list = []
         if len(self.tRNAs) > 0:
             for trna in self.tRNAs:
-                print(trna)
-                print(dir(trna.location))
                 if trna.location is None:
                     continue
                 start, stop, strand = trna.location.start, trna.location.end, trna.location.strand
@@ -228,7 +213,6 @@ class Orf(object):
         try:
             protein = self.qualifiers['translation']
         except:
-            print(self.id)
             protein = ['']
         return protein
     def getProduct(self):
@@ -240,9 +224,6 @@ class Orf(object):
         id = '|'.join([self.accessions,self.orf.id[0]])
         loc = np.where(pham_df.member == id)[0]
         color = pham_color_dict[list(pham_df.iloc[loc,0])[0]]
-    def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__,
-            sort_keys=True, indent=4)
 
 def cluster(phages, working_path):
     f = open(os.path.join(working_path, 'faa', 'orfs_pool.faa'), 'w')
@@ -290,9 +271,7 @@ def blastn(phages, working_path):
             handle.write(str(blastx_cline))
             handle.write('\n')
         handle.close()
-    #parallel = ['/home/jbd_apps/bin/parallel', '<', os.path.join(working_path, 'commands.txt')]
     with open(os.path.join(working_path, 'commands.txt'), 'r') as f:
-        print(f)
         subprocess.run('parallel', stdin=f, check=True)
     results_di = {}
     for blast_out in glob.glob(os.path.join(working_path, "blast_out", '*.out')):
@@ -350,7 +329,7 @@ def draw_repeat(start,stop,strand,z,h,firstorf,lastorf):
         y=(z,z-h,z-h,z,z)
     return x,y
 
-def graphing(pham_df, phages, blast_di):
+def graphing(pham_df, phages, blast_di, labels):
     phams = set(pham_df.representative)
     rgb_values = ['rgb{}'.format(tuple(np.random.choice(range(256), size=3))) for i in range(len(phams))]
     pham_color_dict = dict(zip(phams,rgb_values))
@@ -416,51 +395,12 @@ def defaultFig():
                 visible = False))
     return fig
 
-def layout():
-    layout = dbc.Container([
-        html.H1('phamlite'),
-        html.Div([
-             dcc.Upload(
-            id='upload-data',
-            children=html.Div([
-                'Drag and Drop or ',
-                html.A('select genbank files')
-            ]),
-            style={
-                'width': '100%',
-                'height': '60px',
-                'lineHeight': '60px',
-                'borderWidth': '1px',
-                'borderStyle': 'dashed',
-                'borderRadius': '5px',
-                'textAlign': 'center',
-                'margin': '10px'
-            },
-            # Allow multiple files to be uploaded
-            multiple=True
-                ),
-             html.Div(id='hidden_pham_df', style={'display': 'none'}),
-             html.Div(id='hidden_phages', style={'display': 'none'}),
-             html.Div(id='hidden_blast_di', style={'display': 'none'}),
-             dcc.Dropdown(
-                id = 'dropdown',
-                options = [{'label':'select genomes','value': 0}],
-                multi=True,
-                ),
-             dbc.Spinner(dcc.Graph(id='phamlite',
-                figure = defaultFig(),
-                 ),)
-            ])
-        ],className='mt-4')
-    return layout
-
 def phamlite_runner(local_paths, run_name):
     storage_path = '/root/phamlite_tmp'
     f  =  os.path.join(storage_path, randomString(8))
     os.makedirs(f)
     makedir(f)
     #step 1: read inputfile and load phage classes
-    #phage_list = [user_file]
     phages = load_phages(local_paths)
     #step 2: pairwise BLASTn between the input genomes
     blast_di = blastn(phages, f)
@@ -468,9 +408,8 @@ def phamlite_runner(local_paths, run_name):
     pham_df = cluster(phages, f)
     #step 4: format the figure labels and graph
     labels = [ {'label':x.annotations['organism'], 'value':i} for i, x in enumerate(phages) ]
-    fig = graphing(pham_df, phages, blast_di)
+    fig = graphing(pham_df, phages, blast_di, labels)
     output_html = '/root/data/{}.html'.format(run_name)
     fig.write_html(output_html)
     return output_html
 
-#app.run_server(host="0.0.0.0", port="8050")

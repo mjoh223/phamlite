@@ -1,4 +1,4 @@
-FROM 812206152185.dkr.ecr.us-west-2.amazonaws.com/wf-base:fbe8-main
+FROM 812206152185.dkr.ecr.us-west-2.amazonaws.com/latch-base:02ab-main
 
 # Its easy to build binaries from source that you can later reference as
 # subprocesses within your workflow.

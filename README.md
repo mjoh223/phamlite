@@ -9,4 +9,4 @@ Inspired by [Phamerator](https://bmcbioinformatics.biomedcentral.com/articles/10
 - Input genome files (genbank format)
 
 ### How to use
-Add the [phamlite](https://console.latch.bio/se/phamlite) workflow to your latch account
+Add the [phamlite](https://console.latch.bio/explore/61249/info) workflow to your latch account

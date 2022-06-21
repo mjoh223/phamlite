@@ -21,8 +21,8 @@ def phamlite_wf(genbank_files: List[LatchFile], run_name: str) -> (LatchFile):
         author: Matthew Johnson
             name: Phamlite
             email: matthew.johnson@ucsf.edu
-            github:
-        repository:
+            github: https://github.com/mjoh223
+        repository: https://github.com/mjoh223/phamlite
         license:
             id: MIT
     Args:
@@ -33,10 +33,9 @@ def phamlite_wf(genbank_files: List[LatchFile], run_name: str) -> (LatchFile):
         run_name:
           run name
           __metadata__:
-            display_name: run name
+            display_name: output filename
     """
     return launch_phamlite_app_tsk(genbank_files = genbank_files, run_name = run_name)
-
 
 # if __name__ == "__main__":
 #     phamlite_wf(genbank_file=LatchFile("/Users/matt/Desktop/PhiKZ.gb"))
